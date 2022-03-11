@@ -23,13 +23,13 @@ const customColors = {
   popTeal: '#00F4C5',
 }
 
-const colors = {
-  brand: {
-    teal: customColors.teal[800],
-    orange: customColors.orange[600],
-  },
+export const brandColors = {
+  teal: customColors.teal[800],
+  orange: customColors.orange[600],
+}
+
+export const colors = {
+  brand: brandColors,
   grey: customColors.gray,
   ...customColors,
 }
-
-export default colors
