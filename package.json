@@ -1,7 +1,9 @@
 {
   "name": "tigerhall-content",
   "private": true,
-  "keywords": ["tigerhall"],
+  "keywords": [
+    "tigerhall"
+  ],
   "homepage": "https://github.com/cajotafer/tigerhall-content",
   "repository": {
     "type": "git",
@@ -11,7 +13,9 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gen:theme-typings": "chakra-cli tokens ./src/theme/index.ts",
+    "postinstall": "npm run gen:theme-typings"
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
@@ -27,6 +31,7 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^1.9.0",
     "@types/node": "^14.6.0",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
