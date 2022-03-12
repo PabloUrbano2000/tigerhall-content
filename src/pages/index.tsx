@@ -3,9 +3,10 @@ import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
 import { Heading, Stack, SimpleGrid } from "@chakra-ui/react";
 
-import { SearchForm } from "../components/SearchForm";
-import { ContentCard, ContentCardData } from "../components/ContentCard";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
+import { ContentCard, ContentCardData } from "../components/ContentCard";
+import { ContentCardSkeleton } from "../components/ContentCard/Skeleton";
+import { SearchForm } from "../components/SearchForm";
 
 interface ContentCardsVars {
   limit: number;
@@ -37,6 +38,8 @@ const GET_PODCAST_CONTENT_CARDS = gql`
   ${PODCAST_CONTENT_CARD}
 `;
 
+const CARDS_LIMIT = 20;
+
 const Index = () => {
   const [keywordsToSearch, setKeywordsToSearch] = React.useState("");
 
@@ -45,7 +48,7 @@ const Index = () => {
     ContentCardsVars
   >(GET_PODCAST_CONTENT_CARDS, {
     variables: {
-      limit: 20,
+      limit: CARDS_LIMIT,
       offset: 0,
       keywords: keywordsToSearch,
     },
@@ -73,7 +76,8 @@ const Index = () => {
       as="main"
       alignItems="center"
       justifyContent="flex-start"
-      height="100vh"
+      height="100%"
+      minH="100vh"
       padding={5}
       spacing={{ base: 4, md: 5 }}
     >
@@ -101,23 +105,23 @@ const Index = () => {
         maxW="container.xl"
         spacing={{ base: "10px", md: "20px" }}
       >
-        {data ? (
-          data.contentCards.edges.map((contentCard, i) => {
-            return (
-              <ContentCard
-                key={contentCard.name}
-                name={contentCard.name}
-                image={contentCard.image}
-                categories={contentCard.categories}
-                experts={contentCard.experts}
-                // first 4 images load faster
-                imageLoading={i < 4 ? "eager" : "lazy"}
-              />
-            );
-          })
-        ) : (
-          <p>no hay</p>
-        )}
+        {data
+          ? data.contentCards.edges.map((contentCard, i) => {
+              return (
+                <ContentCard
+                  key={contentCard.name}
+                  name={contentCard.name}
+                  image={contentCard.image}
+                  categories={contentCard.categories}
+                  experts={contentCard.experts}
+                  // first 4 images load faster
+                  imageLoading={i < 4 ? "eager" : "lazy"}
+                />
+              );
+            })
+          : Array(CARDS_LIMIT)
+              .fill(1)
+              .map((_, i) => <ContentCardSkeleton key={i} />)}
       </SimpleGrid>
       ;
     </Stack>

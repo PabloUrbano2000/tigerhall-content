@@ -58,7 +58,7 @@ const addFit = (resizerParams: string, fit: ResizeProps["fit"]) =>
 
 const RESIZER_PREFIX = "resize/";
 export const fallbackImage =
-  "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+  "https://play-lh.googleusercontent.com/pZhLWxoQ843sV1ssPJBhHBKICAw2em89pZN9-5Io28sQOwzjV5lr-4cKX54kbntT0w";
 
 /** @todo we need to improve the way we concat the params to the URL */
 export const resize = ({

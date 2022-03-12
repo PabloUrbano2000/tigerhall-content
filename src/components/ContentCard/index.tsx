@@ -1,25 +1,17 @@
-import { Box, Text, Image, ImageProps } from "@chakra-ui/react";
+import { Box, Image, ImageProps } from "@chakra-ui/react";
+
 import { resize, fallbackImage } from "../../utils/resizer";
+import { ContentCardInfo, Expert, Category } from "./Info";
 
 interface Image {
   uri: string;
 }
 
-interface Category {
-  name: string;
-}
-
-interface Expert {
-  firstName: string;
-  lastName: string;
-  title: string;
-  company: string;
-}
 export interface ContentCardData {
-  name?: string;
-  image?: Image;
-  categories?: Category[];
-  experts?: Expert[];
+  name: string;
+  image: Image;
+  categories: Category[];
+  experts: Expert[];
 }
 
 interface ContentCardCustomProps {
@@ -69,7 +61,6 @@ export const ContentCard: React.FC<ContentCardData & ContentCardCustomProps> = (
       <Box flexShrink={0}>
         <Image
           src={resizedImage}
-          fallbackSrc={fallbackImage}
           height={130}
           width="full"
           objectFit="cover"
@@ -77,63 +68,19 @@ export const ContentCard: React.FC<ContentCardData & ContentCardCustomProps> = (
           decoding="async"
           bgColor="gray.100"
           loading={imageLoading}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            e.currentTarget.src = fallbackImage;
+          }}
         />
       </Box>
       <Box mt="10px" mx="12px">
-        <Text
-          as="h3"
-          fontWeight="bold"
-          textTransform="uppercase"
-          fontSize="12px"
-          lineHeight="15px"
-          color="brand.orange"
-          noOfLines={2}
-        >
-          {category}
-        </Text>
-        <Text
-          as="h2"
-          mt={1}
-          display="block"
-          fontWeight="bold"
-          fontSize="18px"
-          lineHeight="22px"
-          color="black"
-          noOfLines={2}
-        >
-          {name}
-        </Text>
-        <Text
-          as="p"
-          mt={2}
-          fontWeight="semibold"
-          fontSize="14px"
-          lineHeight="17px"
-          color="grey.1000"
-          isTruncated
-        >
-          {expertName}
-        </Text>
-        <Text
-          as="p"
-          fontWeight="semibold"
-          fontSize="14px"
-          lineHeight="17px"
-          color="grey.1000"
-          isTruncated
-        >
-          {expertTitle}
-        </Text>
-        <Text
-          as="p"
-          fontWeight="semibold"
-          fontSize="14px"
-          lineHeight="17px"
-          color="brand.orange"
-          isTruncated
-        >
-          {expertCompany}
-        </Text>
+        <ContentCardInfo
+          title={name}
+          category={category}
+          expertName={expertName}
+          expertTitle={expertTitle}
+          expertCompany={expertCompany}
+        />
       </Box>
     </Box>
   );
