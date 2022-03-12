@@ -131,6 +131,7 @@ function Index() {
       </Stack>
       <SlideFade in offsetY={50} delay={0.5}>
         <SimpleGrid
+          as="section"
           columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
           px={{ base: 0, sm: 10 }}
           maxW="container.xl"
