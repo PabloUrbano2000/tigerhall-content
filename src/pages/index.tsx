@@ -149,7 +149,7 @@ function Index() {
                   />
                 );
               })
-            : Array(CARDS_LIMIT)
+            : Array(CARDS_LIMIT + offset)
                 .fill(1)
                 .map((_, i) => <ContentCardSkeleton key={i} />)}
         </SimpleGrid>
