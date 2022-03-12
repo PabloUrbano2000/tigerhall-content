@@ -10,6 +10,29 @@ const httpLink = new HttpLink({
 });
 
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          contentCards: {
+            keyArgs: ["filter", ["keywords"]],
+            merge(
+              existing,
+              incoming,
+              {
+                args: {
+                  filter: { offset = 0 },
+                },
+              }
+            ) {
+              if (!existing?.edges) return { ...incoming };
+              const merged = existing.edges.concat(incoming.edges);
+              return merged;
+            },
+          },
+        },
+      },
+    },
+  }),
   link: ApolloLink.from([httpLink]),
 });

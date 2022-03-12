@@ -1,7 +1,13 @@
 import * as React from "react";
 import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
-import { Heading, Stack, SimpleGrid, SlideFade } from "@chakra-ui/react";
+import {
+  Heading,
+  Stack,
+  SimpleGrid,
+  SlideFade,
+  Button,
+} from "@chakra-ui/react";
 
 import { pushHistoryState } from "../utils/history";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
@@ -42,22 +48,36 @@ const GET_PODCAST_CONTENT_CARDS = gql`
 
 const CARDS_LIMIT = 20;
 
-const Index = () => {
+function Index() {
   const [keywordsToSearch, setKeywordsToSearch] = React.useState("");
+  const [offset, setOffset] = React.useState(0);
 
-  const [loadSearchResults, { called, loading, data, error }] = useLazyQuery<
-    ContentCardsResponse,
-    ContentCardsVars
-  >(GET_PODCAST_CONTENT_CARDS, {
-    variables: {
-      limit: CARDS_LIMIT,
-      offset: 0,
-      keywords: keywordsToSearch,
-    },
-  });
+  const [loadSearchResults, { called, loading, data, error, fetchMore }] =
+    useLazyQuery<ContentCardsResponse, ContentCardsVars>(
+      GET_PODCAST_CONTENT_CARDS,
+      {
+        variables: {
+          limit: CARDS_LIMIT + offset,
+          offset,
+          keywords: keywordsToSearch,
+        },
+      }
+    );
+
+  function handleLoadMore() {
+    const newOffset = offset + CARDS_LIMIT;
+    fetchMore({
+      variables: {
+        limit: CARDS_LIMIT + newOffset,
+        offset: newOffset,
+      },
+    });
+    setOffset(newOffset);
+  }
 
   const debouncedSearch = React.useCallback(
     debounce((value: string) => {
+      setOffset(0);
       setKeywordsToSearch(value);
       pushHistoryState({ keywords: value });
     }, 300),
@@ -134,6 +154,20 @@ const Index = () => {
                 .map((_, i) => <ContentCardSkeleton key={i} />)}
         </SimpleGrid>
       </SlideFade>
+      <Button
+        bgColor="orange.600"
+        borderRadius={5}
+        size="sm"
+        onClick={handleLoadMore}
+        _active={{
+          bgColor: "orange.700",
+        }}
+        _hover={{
+          bgColor: "orange.500",
+        }}
+      >
+        Load more
+      </Button>
       {error ? (
         <Toast
           title="Ups! something happened."
@@ -145,5 +179,5 @@ const Index = () => {
       ) : null}
     </Stack>
   );
-};
+}
 export default Index;
