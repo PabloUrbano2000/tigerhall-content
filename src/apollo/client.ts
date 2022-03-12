@@ -1,6 +1,16 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+
+const httpLink = new HttpLink({
+  uri: process.env.NEXT_PUBLIC_GQL_ENDPOINT,
+});
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: process.env.NEXT_PUBLIC_GQL_ENDPOINT
+  link: ApolloLink.from([httpLink]),
+  name: "TigerhallContent",
 });
