@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useToast, UseToastOptions } from "@chakra-ui/react";
 
-export const Toast = (props: UseToastOptions) => {
+export function Toast(props: UseToastOptions) {
   const toast = useToast();
 
   React.useEffect(() => {
@@ -9,4 +9,4 @@ export const Toast = (props: UseToastOptions) => {
   }, []);
 
   return null;
-};
+}

@@ -12,20 +12,20 @@ interface SearchFormProps {
   search?: (value: string) => void;
 }
 
-export const SearchForm: React.FC<
-  Omit<InputProps, "value" | "onChange"> & SearchFormProps
-> = (props) => {
+export function SearchForm(
+  props: Omit<InputProps, "value" | "onChange"> & SearchFormProps
+) {
   const { isBusy, search, ...rest } = props || {};
   const [inputValue, setInputValue] = React.useState("");
 
-  const changeValue = (value: string) => {
+  function changeValue(value: string) {
     setInputValue(value);
     if (search) search(value);
-  };
+  }
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     changeValue(e.target.value);
-  };
+  }
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -45,4 +45,4 @@ export const SearchForm: React.FC<
       </InputGroup>
     </form>
   );
-};
+}

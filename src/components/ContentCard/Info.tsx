@@ -19,13 +19,13 @@ interface ContentCardInfoProps {
   expertCompany: Expert["company"];
 }
 
-export const ContentCardInfo: React.FC<ContentCardInfoProps> = ({
+export function ContentCardInfo({
   title,
   category,
   expertName,
   expertTitle,
   expertCompany,
-}) => {
+}: ContentCardInfoProps) {
   return (
     <>
       <Text
@@ -84,4 +84,4 @@ export const ContentCardInfo: React.FC<ContentCardInfoProps> = ({
       </Text>
     </>
   );
-};
+}

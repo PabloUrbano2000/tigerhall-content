@@ -15,53 +15,57 @@ interface ResizeProps {
   fit?: boolean;
 }
 
-const addParam = (resizerParams: string, param: string | number) =>
-  param ? `${resizerParams}${param},` : resizerParams;
+function addParam(resizerParams: string, param: string | number) {
+  return param ? `${resizerParams}${param},` : resizerParams;
+}
 
-const addQuality = (resizerParams: string, quality: ResizeProps["quality"]) => {
+function addQuality(resizerParams: string, quality: ResizeProps["quality"]) {
   if (quality < 0 || quality > 100) {
     throw new Error(
       `Quality must be a value between 1 - 100. You provided ${quality}`
     );
   }
   return addParam(resizerParams, `q${quality}`);
-};
+}
 
-const addFormat = (resizerParams: string, format: ResizeProps["format"]) =>
-  format ? addParam(resizerParams, format) : resizerParams;
+function addFormat(resizerParams: string, format: ResizeProps["format"]) {
+  return format ? addParam(resizerParams, format) : resizerParams;
+}
 
-const addSize = (
+function addSize(
   resizerParams: string,
   width: ResizeProps["width"],
   height: ResizeProps["height"]
-) => addParam(resizerParams, `${width}x${height}`);
+) {
+  return addParam(resizerParams, `${width}x${height}`);
+}
 
-const addRotation = (
-  resizerParams: string,
-  rotation: ResizeProps["rotation"]
-) => {
+function addRotation(resizerParams: string, rotation: ResizeProps["rotation"]) {
   if (rotation < 0 || rotation > 360) {
     throw new Error(
       `Rotation must be a value between 0 - 360. You provided ${rotation}`
     );
   }
   return rotation ? addParam(resizerParams, `r${rotation}`) : resizerParams;
-};
+}
 
-const addSmartCrop = (
+function addSmartCrop(
   resizerParams: string,
   smartCrop: ResizeProps["smartCrop"]
-) => (smartCrop ? addParam(resizerParams, "sc") : resizerParams);
+) {
+  return smartCrop ? addParam(resizerParams, "sc") : resizerParams;
+}
 
-const addFit = (resizerParams: string, fit: ResizeProps["fit"]) =>
-  fit ? addParam(resizerParams, "fit") : resizerParams;
+function addFit(resizerParams: string, fit: ResizeProps["fit"]) {
+  return fit ? addParam(resizerParams, "fit") : resizerParams;
+}
 
 const RESIZER_PREFIX = "resize/";
 export const fallbackImage =
   "https://play-lh.googleusercontent.com/pZhLWxoQ843sV1ssPJBhHBKICAw2em89pZN9-5Io28sQOwzjV5lr-4cKX54kbntT0w";
 
 /** @todo we need to improve the way we concat the params to the URL */
-export const resize = ({
+export function resize({
   url,
   width = 0,
   height = 0,
@@ -70,7 +74,7 @@ export const resize = ({
   rotation,
   smartCrop,
   fit,
-}: ResizeProps) => {
+}: ResizeProps) {
   let resizerParams = addSize(RESIZER_PREFIX, width, height);
   resizerParams = addQuality(resizerParams, quality);
   resizerParams = addFormat(resizerParams, format);
@@ -87,4 +91,4 @@ export const resize = ({
         `$1${resizerParams}/`
       )
     : fallbackImage;
-};
+}
