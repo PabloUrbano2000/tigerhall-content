@@ -1,5 +1,5 @@
 import { Box, Text, Image, ImageProps } from "@chakra-ui/react";
-import { resize } from "../../utils/resizer";
+import { resize, fallbackImage } from "../../utils/resizer";
 
 interface Image {
   uri: string;
@@ -15,8 +15,7 @@ interface Expert {
   title: string;
   company: string;
 }
-
-export interface ContentCardProps {
+export interface ContentCardData {
   name?: string;
   image?: Image;
   categories?: Category[];
@@ -27,9 +26,9 @@ interface ContentCardCustomProps {
   imageLoading?: ImageProps["loading"];
 }
 
-export const ContentCard: React.FC<
-  ContentCardProps & ContentCardCustomProps
-> = (props) => {
+export const ContentCard: React.FC<ContentCardData & ContentCardCustomProps> = (
+  props
+) => {
   const {
     name,
     image,
@@ -45,7 +44,7 @@ export const ContentCard: React.FC<
     width: 276 * 2,
     height: 130 * 2,
     smartCrop: true,
-    format: "jpg",
+    format: "jpeg",
   });
 
   const { name: category } = categories?.[0] || {};
@@ -70,6 +69,7 @@ export const ContentCard: React.FC<
       <Box flexShrink={0}>
         <Image
           src={resizedImage}
+          fallbackSrc={fallbackImage}
           height={130}
           width="full"
           objectFit="cover"

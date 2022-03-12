@@ -4,13 +4,19 @@ import { useLazyQuery, gql } from "@apollo/client";
 import { Heading, Stack, SimpleGrid } from "@chakra-ui/react";
 
 import { SearchForm } from "../components/SearchForm";
-import { ContentCard, ContentCardProps } from "../components/ContentCard";
+import { ContentCard, ContentCardData } from "../components/ContentCard";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
 
 interface ContentCardsVars {
   limit: number;
   offset: number;
   keywords: string;
+}
+
+interface ContentCardsResponse {
+  contentCards: {
+    edges: ContentCardData[];
+  };
 }
 
 const GET_PODCAST_CONTENT_CARDS = gql`
@@ -36,7 +42,7 @@ const Index = () => {
   const [keywordsToSearch, setKeywordsToSearch] = React.useState(inputValue);
 
   const [loadSearchResults, { called, loading, data, error }] = useLazyQuery<
-    ContentCardProps,
+    ContentCardsResponse,
     ContentCardsVars
   >(GET_PODCAST_CONTENT_CARDS, {
     variables: {
@@ -102,13 +108,23 @@ const Index = () => {
         maxW="container.xl"
         spacing={{ base: "10px", md: "20px" }}
       >
-        <ContentCard />
-        <ContentCard />
-        <ContentCard />
-        <ContentCard />
-        <ContentCard />
-        <ContentCard />
-        <ContentCard />
+        {data ? (
+          data.contentCards.edges.map((contentCard, i) => {
+            return (
+              <ContentCard
+                key={contentCard.name}
+                name={contentCard.name}
+                image={contentCard.image}
+                categories={contentCard.categories}
+                experts={contentCard.experts}
+                // first 4 images load faster
+                imageLoading={i < 4 ? "eager" : "lazy"}
+              />
+            );
+          })
+        ) : (
+          <p>no hay</p>
+        )}
       </SimpleGrid>
       ;
     </Stack>
