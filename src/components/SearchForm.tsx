@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   InputGroup,
   InputRightElement,
@@ -8,14 +9,24 @@ import {
 
 interface SearchFormProps {
   isBusy?: boolean;
+  search?: (value: string) => void;
 }
 
-export const SearchForm: React.FC<InputProps & SearchFormProps> = (props) => {
-  const { isBusy, ...rest } = props || {};
+export const SearchForm: React.FC<
+  Omit<InputProps, "value" | "onChange"> & SearchFormProps
+> = (props) => {
+  const { isBusy, search, ...rest } = props || {};
+  const [inputValue, setInputValue] = React.useState("");
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    if (search) search(e.target.value);
+  };
+
   return (
     <form role="search" onSubmit={(e) => e.preventDefault()}>
       <InputGroup>
-        <Input {...rest} />
+        <Input {...rest} value={inputValue} onChange={handleOnChange} />
         {isBusy && (
           <InputRightElement height="full">
             <Spinner size={rest.size} />

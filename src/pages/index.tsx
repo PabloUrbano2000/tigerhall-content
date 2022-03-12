@@ -38,8 +38,7 @@ const GET_PODCAST_CONTENT_CARDS = gql`
 `;
 
 const Index = () => {
-  const [inputValue, setInputValue] = React.useState("");
-  const [keywordsToSearch, setKeywordsToSearch] = React.useState(inputValue);
+  const [keywordsToSearch, setKeywordsToSearch] = React.useState("");
 
   const [loadSearchResults, { called, loading, data, error }] = useLazyQuery<
     ContentCardsResponse,
@@ -51,11 +50,6 @@ const Index = () => {
       keywords: keywordsToSearch,
     },
   });
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    debouncedSearch(e.target.value);
-  };
 
   const debouncedSearch = React.useCallback(
     debounce((value) => setKeywordsToSearch(value), 300),
@@ -97,9 +91,8 @@ const Index = () => {
           size="sm"
           height={29}
           borderRadius={5}
-          value={inputValue}
-          onChange={handleOnChange}
           isBusy={called && loading}
+          search={debouncedSearch}
         />
       </Stack>
       <SimpleGrid
