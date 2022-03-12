@@ -1,21 +1,11 @@
 {
   "name": "tigerhall-content",
   "private": true,
-<<<<<<< HEAD
   "keywords": ["tigerhall"],
   "homepage": "https://github.com/cajotafer/tigerhall-content",
   "repository": {
     "type": "git",
     "url": "git@github.com:cajotafer/tigerhall-content.git"
-=======
-  "keywords": [
-    "tigerhall"
-  ],
-  "homepage": "https://github.com/cajotafer/tigerhall-content",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cajotafer/tigerhall-content.git"
->>>>>>> dev
   },
   "description": "Small single-page application that can be used to search tigerhall content",
   "scripts": {
