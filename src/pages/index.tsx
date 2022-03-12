@@ -1,10 +1,10 @@
 import * as React from "react";
 import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
-import { Heading, Stack } from "@chakra-ui/react";
+import { Heading, Stack, SimpleGrid } from "@chakra-ui/react";
 
 import { SearchForm } from "../components/SearchForm";
-import { ContentCardProps } from "../components/ContentCard";
+import { ContentCard, ContentCardProps } from "../components/ContentCard";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
 
 interface ContentCardsVars {
@@ -96,6 +96,21 @@ const Index = () => {
           isBusy={called && loading}
         />
       </Stack>
+      <SimpleGrid
+        columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
+        px={{ base: 0, sm: 10 }}
+        maxW="container.xl"
+        spacing={{ base: "10px", md: "20px" }}
+      >
+        <ContentCard />
+        <ContentCard />
+        <ContentCard />
+        <ContentCard />
+        <ContentCard />
+        <ContentCard />
+        <ContentCard />
+      </SimpleGrid>
+      ;
     </Stack>
   );
 };

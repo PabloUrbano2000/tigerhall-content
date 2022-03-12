@@ -1,4 +1,5 @@
-import { Box, Text, Image } from "@chakra-ui/react";
+import { Box, Text, Image, ImageProps } from "@chakra-ui/react";
+import { resize } from "../../utils/resizer";
 
 interface Image {
   uri: string;
@@ -22,47 +23,118 @@ export interface ContentCardProps {
   experts?: Expert[];
 }
 
-const ContentCard: React.FC<ContentCardProps> = (props) => {
-  const { name, image, categories, experts } = props || {};
+interface ContentCardCustomProps {
+  imageLoading?: ImageProps["loading"];
+}
+
+export const ContentCard: React.FC<
+  ContentCardProps & ContentCardCustomProps
+> = (props) => {
+  const {
+    name,
+    image,
+    categories,
+    experts,
+    imageLoading = "lazy",
+  } = props || {};
+
+  const { uri: imageUrl } = image || {};
+  // image size x2 for improved performance in screens with high pixel density
+  const resizedImage = resize({
+    url: imageUrl,
+    width: 276 * 2,
+    height: 130 * 2,
+    smartCrop: true,
+    format: "jpg",
+  });
+
+  const { name: category } = categories?.[0] || {};
+
+  const {
+    firstName: expertFirstName = "",
+    lastName: expertLastName = "",
+    title: expertTitle = "",
+    company: expertCompany = "",
+  } = experts?.[0] || {};
+  const expertName = `${expertFirstName} ${expertLastName}`;
 
   return (
-    <Box as="article" maxW={276} height={290} bg="orange.600">
+    <Box
+      as="article"
+      width={276}
+      height={290}
+      bg="white"
+      borderRadius={5}
+      overflow="hidden"
+    >
       <Box flexShrink={0}>
         <Image
-          src="https://bit.ly/2jYM25F"
+          src={resizedImage}
           height={130}
           width="full"
           objectFit="cover"
-          alt="Woman paying for a purchase"
+          alt={name}
           decoding="async"
           bgColor="gray.100"
+          loading={imageLoading}
         />
       </Box>
-      <Box mt={4}>
+      <Box mt="10px" mx="12px">
         <Text
+          as="h3"
           fontWeight="bold"
           textTransform="uppercase"
-          fontSize="sm"
-          letterSpacing="wide"
-          color="teal.600"
+          fontSize="12px"
+          lineHeight="15px"
+          color="brand.orange"
+          noOfLines={2}
         >
-          Test1
+          {category}
         </Text>
         <Text
+          as="h2"
           mt={1}
           display="block"
-          fontSize="lg"
-          lineHeight="normal"
-          fontWeight="semibold"
+          fontWeight="bold"
+          fontSize="18px"
+          lineHeight="22px"
+          color="black"
+          noOfLines={2}
         >
-          Test2
+          {name}
         </Text>
-        <Text mt={2} color="gray.500">
-          bla bla bla bla bla bla
+        <Text
+          as="p"
+          mt={2}
+          fontWeight="semibold"
+          fontSize="14px"
+          lineHeight="17px"
+          color="grey.1000"
+          isTruncated
+        >
+          {expertName}
+        </Text>
+        <Text
+          as="p"
+          fontWeight="semibold"
+          fontSize="14px"
+          lineHeight="17px"
+          color="grey.1000"
+          isTruncated
+        >
+          {expertTitle}
+        </Text>
+        <Text
+          as="p"
+          fontWeight="semibold"
+          fontSize="14px"
+          lineHeight="17px"
+          color="brand.orange"
+          isTruncated
+        >
+          {expertCompany}
         </Text>
       </Box>
     </Box>
   );
 };
-
-export default ContentCard;
