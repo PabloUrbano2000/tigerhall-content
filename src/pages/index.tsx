@@ -1,7 +1,7 @@
 import * as React from "react";
 import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
-import { Heading, Stack, SimpleGrid } from "@chakra-ui/react";
+import { Heading, Stack, SimpleGrid, SlideFade } from "@chakra-ui/react";
 
 import { pushHistoryState } from "../utils/history";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
@@ -108,30 +108,32 @@ const Index = () => {
           search={debouncedSearch}
         />
       </Stack>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
-        px={{ base: 0, sm: 10 }}
-        maxW="container.xl"
-        spacing={{ base: "10px", md: "20px" }}
-      >
-        {data
-          ? data.contentCards.edges.map((contentCard, i) => {
-              return (
-                <ContentCard
-                  key={contentCard.name}
-                  name={contentCard.name}
-                  image={contentCard.image}
-                  categories={contentCard.categories}
-                  experts={contentCard.experts}
-                  // first 4 images load faster
-                  imageLoading={i < 4 ? "eager" : "lazy"}
-                />
-              );
-            })
-          : Array(CARDS_LIMIT)
-              .fill(1)
-              .map((_, i) => <ContentCardSkeleton key={i} />)}
-      </SimpleGrid>
+      <SlideFade in offsetY={50} delay={0.5}>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
+          px={{ base: 0, sm: 10 }}
+          maxW="container.xl"
+          spacing={{ base: "10px", md: "20px" }}
+        >
+          {data
+            ? data.contentCards.edges.map((contentCard, i) => {
+                return (
+                  <ContentCard
+                    key={contentCard.name}
+                    name={contentCard.name}
+                    image={contentCard.image}
+                    categories={contentCard.categories}
+                    experts={contentCard.experts}
+                    // first 4 images load faster
+                    imageLoading={i < 4 ? "eager" : "lazy"}
+                  />
+                );
+              })
+            : Array(CARDS_LIMIT)
+                .fill(1)
+                .map((_, i) => <ContentCardSkeleton key={i} />)}
+        </SimpleGrid>
+      </SlideFade>
       {error ? (
         <Toast
           title="Ups! something happened."
