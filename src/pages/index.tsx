@@ -32,6 +32,7 @@ const GET_PODCAST_CONTENT_CARDS = gql`
 
 const Index = () => {
   const [searchValue, setSearchValue] = React.useState("");
+  const [keywords, setKeywords] = React.useState(searchValue);
 
   const [loadSearchResults, { called, loading, data }] = useLazyQuery<
     ContentCardProps,
@@ -40,25 +41,19 @@ const Index = () => {
     variables: {
       limit: 20,
       offset: 0,
-      keywords: searchValue,
+      keywords,
     },
   });
 
   React.useEffect(() => {
     loadSearchResults();
     console.log("data", data);
-  }, []);
+  }, [keywords]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
     console.log(e.target.value);
   };
-
-  if (loading) {
-    return <div>loading</div>;
-  }
-
-  if (called && loading) return <p>Loading ...</p>;
 
   return (
     <Stack
