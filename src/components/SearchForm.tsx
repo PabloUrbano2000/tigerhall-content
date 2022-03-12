@@ -26,7 +26,12 @@ export const SearchForm: React.FC<
   return (
     <form role="search" onSubmit={(e) => e.preventDefault()}>
       <InputGroup>
-        <Input {...rest} value={inputValue} onChange={handleOnChange} />
+        <Input
+          {...rest}
+          value={inputValue}
+          onChange={handleOnChange}
+          focusBorderColor="brand.orange"
+        />
         {isBusy && (
           <InputRightElement height="full">
             <Spinner size={rest.size} />
