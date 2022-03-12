@@ -93,6 +93,7 @@ const Index = () => {
           borderRadius={5}
           value={inputValue}
           onChange={handleOnChange}
+          isBusy={called && loading}
         />
       </Stack>
     </Stack>
