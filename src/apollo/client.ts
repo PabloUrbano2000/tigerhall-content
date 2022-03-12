@@ -12,5 +12,4 @@ const httpLink = new HttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: ApolloLink.from([httpLink]),
-  name: "TigerhallContent",
 });
