@@ -1,4 +1,5 @@
 import * as React from "react";
+import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
 import { Heading, Stack } from "@chakra-ui/react";
 
@@ -31,29 +32,41 @@ const GET_PODCAST_CONTENT_CARDS = gql`
 `;
 
 const Index = () => {
-  const [searchValue, setSearchValue] = React.useState("");
-  const [keywords, setKeywords] = React.useState(searchValue);
+  const [inputValue, setInputValue] = React.useState("");
+  const [keywordsToSearch, setKeywordsToSearch] = React.useState(inputValue);
 
-  const [loadSearchResults, { called, loading, data }] = useLazyQuery<
+  const [loadSearchResults, { called, loading, data, error }] = useLazyQuery<
     ContentCardProps,
     ContentCardsVars
   >(GET_PODCAST_CONTENT_CARDS, {
     variables: {
       limit: 20,
       offset: 0,
-      keywords,
+      keywords: keywordsToSearch,
     },
   });
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    debouncedSearch(e.target.value);
+  };
+
+  const debouncedSearch = React.useCallback(
+    debounce((value) => setKeywordsToSearch(value), 300),
+    []
+  );
+
+  // triggers the search query when the `keywordsToSearch` state changes
   React.useEffect(() => {
     loadSearchResults();
-    console.log("data", data);
-  }, [keywords]);
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-    console.log(e.target.value);
-  };
+    return () => {
+      // abort any request when unmounting
+      const controller = new AbortController();
+      controller.abort();
+      debouncedSearch.cancel();
+    };
+  }, [keywordsToSearch]);
 
   return (
     <Stack
@@ -78,7 +91,7 @@ const Index = () => {
           size="sm"
           height={29}
           borderRadius={5}
-          value={searchValue}
+          value={inputValue}
           onChange={handleOnChange}
         />
       </Stack>
