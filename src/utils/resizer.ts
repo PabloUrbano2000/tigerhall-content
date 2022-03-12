@@ -64,6 +64,8 @@ const addFit = (resizerParams: string, fit: ResizeProps["fit"]) =>
   fit ? resizerParams + addParam(resizerParams, "fit") : resizerParams;
 
 const RESIZER_PREFIX = "resize/";
+const fallbackImage =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
 /** @todo we need to improve the way we concat the params to the URL */
 export const resize = ({
@@ -83,8 +85,10 @@ export const resize = ({
   resizerParams = addSmartCrop(resizerParams, smartCrop);
   resizerParams = addFit(resizerParams, fit);
 
-  return url.replace(
-    /(^https?:\/\/[\.\w-]+tigerhall\.(?:io|com)?\/)/,
-    `$1resize/${resizerParams}`
-  );
+  return url
+    ? url.replace(
+        /(^https?:\/\/[\.\w-]+tigerhall\.(?:io|com)?\/)/,
+        `$1resize/${resizerParams}`
+      )
+    : fallbackImage;
 };
