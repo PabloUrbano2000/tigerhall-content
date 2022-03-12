@@ -10,6 +10,9 @@
     "url": "https://github.com/cajotafer/tigerhall-content.git"
   },
   "description": "Small single-page application that can be used to search tigerhall content",
+  "engines": {
+    "node": ">=12.22"
+  },
   "scripts": {
     "dev": "next",
     "build": "next build",

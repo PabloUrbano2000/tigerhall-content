@@ -1,39 +1,43 @@
-# Example app with [chakra-ui](https://github.com/chakra-ui/chakra-ui) and TypeScript
+# TIGERHALL CONTENT
 
-This example features how to use [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app with TypeScript.
+Welcome to the best, SEO-friendly, performant and modern single-page application to search [Tigerhall](https://tigerhall.com/) content.
+You can find a **live preview [here](https://tigerhall-content.vercel.app/)**, deployed on [Vercel](https://vercel.com/).
 
-Next.js and chakra-ui have built-in TypeScript declarations, so we'll get autocompletion for their modules straight away.
+## System requirements
 
-We are connecting the Next.js `_app.js` with `chakra-ui`'s Provider and theme so the pages can have app-wide dark/light mode. We are also creating some components which shows the usage of `chakra-ui`'s style props.
-
-## Preview
-
-Preview the example live on [StackBlitz](http://stackblitz.com/):
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-chakra-ui-typescript)
-
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-chakra-ui-typescript&project-name=with-chakra-ui-typescript&repository-name=with-chakra-ui-typescript)
+- Node.js 12.22.0 or later
+- MacOS, Windows (including WSL), and Linux are supported
+- Yarn
 
 ## How to use
 
-### Using `create-next-app`
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+1. **Clone** the repository. If you are not familiar with this term, please take a look at [this guide](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+2. Make sure your terminal is pointing to the new directory you created when cloning the repository.
+3. Install the project dependencies executing:
 
 ```bash
-npx create-next-app --example with-chakra-ui-typescript with-chakra-ui-typescript-app
-# or
-yarn create next-app --example with-chakra-ui-typescript with-chakra-ui-typescript-app
+$ yarn
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+4. Run the project with:
 
-## Notes
+```bash
+$ yarn dev
+```
 
-Chakra has supported Gradients and RTL in `v1.1`. To utilize RTL, [add RTL direction and swap](https://chakra-ui.com/docs/features/rtl-support).
+5. In your favorite browser (I hope it's not IE), visit the URL http://localhost:3000
 
-If you don't have multi-direction app, you should make `<Html lang="ar" dir="rtl">` inside `_document.ts`.
+## Tech stack
+
+NextJS + React
+Typescript
+GraphQL + Apollo client
+Chakra UI
+Next SEO
+
+## Considerations
+
+- The Commit Messages are based in the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) (with no body nor footer).
+- The reason why, when necessary, I import React this way `import * as React from 'react'` -> https://epicreact.dev/importing-react-through-the-ages/
+- Some image URLs coming from the API are broken, that's why you will see a fallback image many times.
+- This is my first time building with Chakra UI. I would love to spend more time with it, is pretty flexible and full of great features I didn't have the chance to try this time.
