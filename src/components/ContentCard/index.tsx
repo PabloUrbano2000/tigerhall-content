@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Box, Image, ImageProps } from "@chakra-ui/react";
 
 import { resize, fallbackImage } from "../../utils/resizer";
@@ -18,9 +19,18 @@ interface ContentCardCustomProps {
   imageLoading?: ImageProps["loading"];
 }
 
-export const ContentCard: React.FC<ContentCardData & ContentCardCustomProps> = (
-  props
-) => {
+type ContentCardProps = ContentCardData & ContentCardCustomProps;
+
+function contentCardsPropsAreEqual(
+  prev: ContentCardProps,
+  next: ContentCardProps
+) {
+  return prev.name === next.name && prev.image?.uri === next.image?.uri;
+}
+
+export const ContentCard = React.memo(function ContentCard(
+  props: ContentCardProps
+) {
   const {
     name,
     image,
@@ -84,4 +94,5 @@ export const ContentCard: React.FC<ContentCardData & ContentCardCustomProps> = (
       </Box>
     </Box>
   );
-};
+},
+contentCardsPropsAreEqual);
