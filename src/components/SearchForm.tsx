@@ -18,20 +18,25 @@ export const SearchForm: React.FC<
   const { isBusy, search, ...rest } = props || {};
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    if (search) search(e.target.value);
+  const changeValue = (value: string) => {
+    setInputValue(value);
+    if (search) search(value);
   };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeValue(e.target.value);
+  };
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const keywordsParam = params.get("keywords");
+    if (keywordsParam) changeValue(keywordsParam);
+  }, []);
 
   return (
     <form role="search" onSubmit={(e) => e.preventDefault()}>
       <InputGroup>
-        <Input
-          {...rest}
-          value={inputValue}
-          onChange={handleOnChange}
-          focusBorderColor="brand.orange"
-        />
+        <Input {...rest} value={inputValue} onChange={handleOnChange} />
         {isBusy && (
           <InputRightElement height="full">
             <Spinner size={rest.size} />

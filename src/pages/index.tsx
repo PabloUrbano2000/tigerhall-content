@@ -3,10 +3,12 @@ import debounce from "lodash.debounce";
 import { useLazyQuery, gql } from "@apollo/client";
 import { Heading, Stack, SimpleGrid } from "@chakra-ui/react";
 
+import { pushHistoryState } from "../utils/history";
 import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
 import { ContentCard, ContentCardData } from "../components/ContentCard";
 import { ContentCardSkeleton } from "../components/ContentCard/Skeleton";
 import { SearchForm } from "../components/SearchForm";
+import { Toast } from "../components/Toast";
 
 interface ContentCardsVars {
   limit: number;
@@ -55,7 +57,10 @@ const Index = () => {
   });
 
   const debouncedSearch = React.useCallback(
-    debounce((value) => setKeywordsToSearch(value), 300),
+    debounce((value: string) => {
+      setKeywordsToSearch(value);
+      pushHistoryState({ keywords: value });
+    }, 300),
     []
   );
 
@@ -89,9 +94,13 @@ const Index = () => {
         <SearchForm
           aria-labelledby="search-label"
           variant="filled"
-          bgColor="teal.800"
           placeholder="Type any keyword"
+          bgColor="teal.800"
           color="gray.700"
+          focusBorderColor="brand.orange"
+          _hover={{
+            bgColor: "teal.900",
+          }}
           size="sm"
           height={29}
           borderRadius={5}
@@ -123,9 +132,16 @@ const Index = () => {
               .fill(1)
               .map((_, i) => <ContentCardSkeleton key={i} />)}
       </SimpleGrid>
-      ;
+      {error ? (
+        <Toast
+          title="Ups! something happened."
+          description={`Please, reload the page: ${error?.message}`}
+          status="error"
+          duration={9000}
+          isClosable
+        />
+      ) : null}
     </Stack>
   );
 };
-
 export default Index;
