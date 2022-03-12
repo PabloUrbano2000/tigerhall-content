@@ -1,4 +1,4 @@
-type ImageFormat = "png" | "jpg" | "webp" | "gif";
+type ImageFormat = "png" | "jpeg" | "webp" | "gif";
 
 interface ResizeProps {
   url: string;
@@ -16,7 +16,7 @@ interface ResizeProps {
 }
 
 const addParam = (resizerParams: string, param: string | number) =>
-  param ? `${resizerParams},${param}` : resizerParams;
+  param ? `${resizerParams}${param},` : resizerParams;
 
 const addQuality = (resizerParams: string, quality: ResizeProps["quality"]) => {
   if (quality < 0 || quality > 100) {
@@ -24,21 +24,17 @@ const addQuality = (resizerParams: string, quality: ResizeProps["quality"]) => {
       `Quality must be a value between 1 - 100. You provided ${quality}`
     );
   }
-  return resizerParams + addParam(resizerParams, `q${quality}`);
+  return addParam(resizerParams, `q${quality}`);
 };
 
 const addFormat = (resizerParams: string, format: ResizeProps["format"]) =>
-  format ? resizerParams + addParam(resizerParams, format) : resizerParams;
+  format ? addParam(resizerParams, format) : resizerParams;
 
 const addSize = (
   resizerParams: string,
   width: ResizeProps["width"],
   height: ResizeProps["height"]
-) => {
-  const square = width === height;
-  const size = square ? width : `${width}x${height}`;
-  return resizerParams + addParam(resizerParams, size);
-};
+) => addParam(resizerParams, `${width}x${height}`);
 
 const addRotation = (
   resizerParams: string,
@@ -49,22 +45,19 @@ const addRotation = (
       `Rotation must be a value between 0 - 360. You provided ${rotation}`
     );
   }
-  return rotation
-    ? resizerParams + addParam(resizerParams, `r${rotation}`)
-    : resizerParams;
+  return rotation ? addParam(resizerParams, `r${rotation}`) : resizerParams;
 };
 
 const addSmartCrop = (
   resizerParams: string,
   smartCrop: ResizeProps["smartCrop"]
-) =>
-  smartCrop ? resizerParams + addParam(resizerParams, "sc") : resizerParams;
+) => (smartCrop ? addParam(resizerParams, "sc") : resizerParams);
 
 const addFit = (resizerParams: string, fit: ResizeProps["fit"]) =>
-  fit ? resizerParams + addParam(resizerParams, "fit") : resizerParams;
+  fit ? addParam(resizerParams, "fit") : resizerParams;
 
 const RESIZER_PREFIX = "resize/";
-const fallbackImage =
+export const fallbackImage =
   "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
 /** @todo we need to improve the way we concat the params to the URL */
@@ -85,10 +78,13 @@ export const resize = ({
   resizerParams = addSmartCrop(resizerParams, smartCrop);
   resizerParams = addFit(resizerParams, fit);
 
+  // removes the trailing comma
+  resizerParams = resizerParams.slice(0, -1);
+
   return url
     ? url.replace(
         /(^https?:\/\/[\.\w-]+tigerhall\.(?:io|com)?\/)/,
-        `$1resize/${resizerParams}`
+        `$1${resizerParams}/`
       )
     : fallbackImage;
 };
