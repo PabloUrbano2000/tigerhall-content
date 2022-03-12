@@ -113,6 +113,7 @@ function Index() {
         </Heading>
         <SearchForm
           aria-labelledby="search-label"
+          name="search"
           variant="filled"
           placeholder="Type any keyword"
           bgColor="teal.800"
