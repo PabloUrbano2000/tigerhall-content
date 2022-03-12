@@ -66,7 +66,7 @@ const Index = () => {
       controller.abort();
       debouncedSearch.cancel();
     };
-  }, [keywordsToSearch]);
+  }, [keywordsToSearch, debouncedSearch, loadSearchResults]);
 
   return (
     <Stack
