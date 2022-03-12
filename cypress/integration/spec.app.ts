@@ -1,15 +1,16 @@
-describe("Navigation", () => {
-  it("should navigate to the about page", () => {
+describe("Structure", () => {
+  it("should have the heading, form, and search input", () => {
     // Start from the index page
     cy.visit("http://localhost:3000/");
 
-    // Find a link with an href attribute containing "about" and click it
-    cy.get('a[href*="about"]').click();
+    // The new page should contain an h1 with "Search"
+    cy.get("h1").contains("Search");
 
-    // The new url should include "/about"
-    cy.url().should("include", "/about");
-
-    // The new page should contain an h1 with "About page"
-    cy.get("h1").contains("About Page");
+    // Check the existence of the search form and inner input
+    cy.get("form[role=search]")
+      .should("exist")
+      .within(($form) => {
+        cy.get("input[name=search]").should("exist");
+      });
   });
 });
