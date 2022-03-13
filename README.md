@@ -27,6 +27,19 @@ $ yarn dev
 
 5. In your favorite browser (I hope it's not IE), visit the URL http://localhost:3000
 
+## Tests
+
+In this project you have 4 different scripts to run the tests.
+
+```bash
+"cypress"
+"cypress run"
+"e2e"
+"e2e:headless"
+```
+
+Plase check the `package.json` for more details and remember that to run Cypress you need some required dependencies installed in your system. [More info here](https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements).
+
 ## Tech stack
 
 NextJS + React
@@ -34,6 +47,7 @@ Typescript
 GraphQL + Apollo client
 Chakra UI
 Next SEO
+Cypress
 
 ## Considerations
 
