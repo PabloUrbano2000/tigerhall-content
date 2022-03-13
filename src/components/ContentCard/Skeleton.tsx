@@ -10,6 +10,7 @@ export const ContentCardSkeleton = React.memo(function ContentCardSkeleton() {
       bg="white"
       borderRadius={5}
       overflow="hidden"
+      data-card-skeleton
     >
       <Box flexShrink={0}>
         <Skeleton height={130} width="full" />
