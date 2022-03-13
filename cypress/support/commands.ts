@@ -31,9 +31,9 @@ Cypress.Commands.add("visitHome", (params = "") => {
 Cypress.Commands.add("renderCards", (quantity = 1, success) => {
   // More than 4 content cards have been rendered
   if (success) {
-    cy.get("article").should("have.length.greaterThan", quantity);
+    cy.get("[data-card]").should("have.length.greaterThan", quantity);
   } else {
-    cy.get("article").should("not.exist");
+    cy.get("[data-card]").should("not.exist");
   }
 });
 

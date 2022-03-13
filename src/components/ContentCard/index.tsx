@@ -67,6 +67,7 @@ export const ContentCard = React.memo(function ContentCard(
       bg="white"
       borderRadius={5}
       overflow="hidden"
+      data-card
     >
       <Box flexShrink={0}>
         <Image
