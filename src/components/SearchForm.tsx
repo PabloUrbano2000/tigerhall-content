@@ -13,7 +13,7 @@ interface SearchFormProps {
 }
 
 export function SearchForm(
-  props: Omit<InputProps, "value" | "onChange"> & SearchFormProps
+  props: Omit<InputProps, "value" | "onChange" | "type"> & SearchFormProps
 ) {
   const { isBusy, search, ...rest } = props || {};
   const [inputValue, setInputValue] = React.useState("");
@@ -36,7 +36,12 @@ export function SearchForm(
   return (
     <form role="search" onSubmit={(e) => e.preventDefault()}>
       <InputGroup>
-        <Input {...rest} value={inputValue} onChange={handleOnChange} />
+        <Input
+          {...rest}
+          value={inputValue}
+          onChange={handleOnChange}
+          type="search"
+        />
         {isBusy && (
           <InputRightElement height="full">
             <Spinner size={rest.size} />
