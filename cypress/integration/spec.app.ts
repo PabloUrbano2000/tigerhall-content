@@ -1,3 +1,7 @@
+/// <reference types="cypress" />
+/// <reference types="../support/index" />
+// ***********************************************
+
 describe("Structure", () => {
   it("should have a form and search input", () => {
     cy.visitHome();
