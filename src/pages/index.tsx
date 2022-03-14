@@ -1,6 +1,6 @@
 import * as React from "react";
 import debounce from "lodash.debounce";
-import { useLazyQuery, gql } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import {
   Heading,
   Stack,
@@ -9,11 +9,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { pushHistoryState } from "../utils/history";
-import { PODCAST_CONTENT_CARD } from "../components/ContentCard/fragments";
-import { ContentCard, ContentCardData } from "../components/ContentCard";
-import { ContentCardSkeleton } from "../components/ContentCard/Skeleton";
+import type { Podcast } from "../lib/graphql/generated/Podcast";
+import { ALL_PODCAST_CARDS } from "../lib/graphql/AllPodcastCards";
+import { pushHistoryState } from "../lib/index";
 import { SearchForm } from "../components/SearchForm";
+import { ContentCard } from "../components/ContentCard";
+import { ContentCardSkeleton } from "../components/ContentCard/Skeleton";
 import { Toast } from "../components/Toast";
 
 interface ContentCardsVars {
@@ -24,27 +25,9 @@ interface ContentCardsVars {
 
 interface ContentCardsResponse {
   contentCards: {
-    edges: ContentCardData[];
+    edges: Podcast[];
   };
 }
-
-const GET_PODCAST_CONTENT_CARDS = gql`
-  query GetExchangeRates($limit: Int!, $offset: Int!, $keywords: String!) {
-    contentCards(
-      filter: {
-        limit: $limit
-        offset: $offset
-        keywords: $keywords
-        types: [PODCAST]
-      }
-    ) {
-      edges {
-        ...Podcast
-      }
-    }
-  }
-  ${PODCAST_CONTENT_CARD}
-`;
 
 const CARDS_LIMIT = 20;
 
@@ -53,16 +36,13 @@ function Index() {
   const [offset, setOffset] = React.useState(0);
 
   const [loadSearchResults, { called, loading, data, error, fetchMore }] =
-    useLazyQuery<ContentCardsResponse, ContentCardsVars>(
-      GET_PODCAST_CONTENT_CARDS,
-      {
-        variables: {
-          limit: CARDS_LIMIT + offset,
-          offset,
-          keywords: keywordsToSearch,
-        },
-      }
-    );
+    useLazyQuery<ContentCardsResponse, ContentCardsVars>(ALL_PODCAST_CARDS, {
+      variables: {
+        limit: CARDS_LIMIT + offset,
+        offset,
+        keywords: keywordsToSearch,
+      },
+    });
 
   function handleLoadMore() {
     const newOffset = offset + CARDS_LIMIT;
@@ -107,26 +87,13 @@ function Index() {
       spacing={{ base: 4, md: 5 }}
     >
       <Stack as="header" spacing={1} w="full" maxW={{ base: 276, md: 480 }}>
-        {/* I had to decide to use "Search" as the h1 or the input label */}
         <Heading as="h1" id="search-label" size="xs" lineHeight="5">
           Search
         </Heading>
         <SearchForm
-          aria-labelledby="search-label"
-          name="search"
-          variant="filled"
-          placeholder="Type any keyword"
-          bgColor="teal.800"
-          color="gray.700"
-          focusBorderColor="brand.orange"
-          _hover={{
-            bgColor: "teal.900",
-          }}
-          size="sm"
-          height={29}
-          borderRadius={5}
           isBusy={called && loading}
           search={debouncedSearch}
+          aria-labelledby="search-label"
         />
       </Stack>
       <SlideFade in offsetY={50} delay={0.5}>

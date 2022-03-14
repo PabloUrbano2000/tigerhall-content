@@ -1,15 +1,7 @@
 import { Text } from "@chakra-ui/react";
 
-export interface Category {
-  name: string;
-}
-
-export interface Expert {
-  firstName: string;
-  lastName: string;
-  title: string;
-  company: string;
-}
+import type { Category } from "../../lib/graphql/generated/Category";
+import type { Expert } from "../../lib/graphql/generated/Expert";
 
 interface ContentCardInfoProps {
   title: string;
