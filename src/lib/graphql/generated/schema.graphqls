@@ -1,0 +1,6046 @@
+"""Ensure that the expert exists"""
+directive @expertExists on INPUT_FIELD_DEFINITION
+
+"""Ensure that the categories exists"""
+directive @categoryExists on INPUT_FIELD_DEFINITION
+
+"""
+Ensure that the private fields on user type can be accessed by authorized users only
+"""
+directive @isAuthorized on FIELD_DEFINITION
+
+""""""
+directive @hasRole(roles: [UserRole!]!) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""Ensure that the image exists in our system"""
+directive @imageExists on INPUT_FIELD_DEFINITION
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+"""
+Old system for content cards
+
+Deprecated: should use one of Content, SearchableContent or Consumable
+"""
+union ContentCard = Ebook | Event | Podcast | Stream | Expert | LearningPath
+
+""""""
+type UserAssignmentStatistics {
+  """"""
+  assignedTrails: Int!
+
+  """"""
+  completedTrails: Int!
+
+  """"""
+  assignedPodcasts: Int!
+
+  """"""
+  completedPodcasts: Int!
+
+  """"""
+  assignedEbooks: Int!
+
+  """"""
+  completedEbooks: Int!
+
+  """"""
+  assignedStreams: Int!
+
+  """"""
+  completedStreams: Int!
+}
+
+""""""
+enum CohortStatus {
+  """"""
+  ONGOING
+
+  """"""
+  FINISHED
+}
+
+""""""
+type CouponConnection {
+  """"""
+  edges: [Coupon!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+type LifegoalCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Lifegoal!]!
+}
+
+""""""
+input OrganisationInput {
+  """"""
+  name: String!
+}
+
+""""""
+enum ContentCardsSorting {
+  """"""
+  TRENDING
+
+  """"""
+  UPDATED_AT
+
+  """"""
+  PUBLISHED_AT
+
+  """"""
+  MY_USER_ACTIVITY
+
+  """"""
+  BOOKMARKED_AT
+
+  """"""
+  FINISHED_AT
+
+  """"""
+  LAST_OPENED_AT
+
+  """"""
+  WEEKLY_TRENDING
+
+  """"""
+  RATING
+}
+
+""""""
+input CursorPaginationInput {
+  """"""
+  beforeCursor: String
+
+  """"""
+  afterCursor: String
+
+  """"""
+  limit: Int
+}
+
+""""""
+input FollowersFollowingFilter {
+  """"""
+  query: String
+
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+
+  """"""
+  isExpert: Boolean
+
+  """"""
+  isAMemberOfSameOrganisation: Boolean
+}
+
+""""""
+input ContentCardsFilter {
+  """Filter by the specified keywords"""
+  keywords: String
+
+  """A number of predefined filters for a user to specify"""
+  selection: ContentSelection
+
+  """Selected categories"""
+  categories: [String!]
+
+  """Select experts"""
+  experts: [String!]
+
+  """Filter on a specific content type"""
+  types: [ContentType!]
+
+  """Filter on specific entry levels"""
+  entryLevels: [EntryLevelValue!]
+
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """Only include recently published pages"""
+  recent: Boolean
+
+  """
+  If experts should be included on the content
+  
+  Deprecated: Specify the explicit types you want in the types field
+  """
+  includeExperts: Boolean
+
+  """If the included experts should be a mentor"""
+  isMentor: Boolean
+
+  """Filter on the length of the content"""
+  duration: IntRangeFilter
+}
+
+""""""
+type LearningPathConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [LearningPath!]!
+}
+
+""""""
+type AudioFile {
+  """"""
+  id: ID!
+
+  """"""
+  uri: String!
+
+  """"""
+  length: Uint32!
+
+  """"""
+  sizeInBytes: Uint64!
+
+  """"""
+  contentType: String!
+
+  """"""
+  filename: String!
+
+  """"""
+  originalName: String!
+
+  """"""
+  createdAt: Time!
+}
+
+""""""
+type UserCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [User!]!
+}
+
+""""""
+union FeedActivityContent = Ebook | Event | Podcast | Stream | Expert | LearningPath | Comment | User
+
+""""""
+type PollQuestionConnection {
+  """"""
+  edges: [PollQuestionResponse!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+"""Content that can be consumed"""
+union ConsumableContent = Ebook | Podcast | Stream | LearningPath
+
+""""""
+input OrganisationFilter {
+  """"""
+  name: String
+
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+}
+
+""""""
+input SortOrdering {
+  """"""
+  sorting: [SortOrderingInput!]
+}
+
+""""""
+input ConsumableContentFilter {
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+type SubscriptionPlan {
+  """"""
+  id: ID!
+
+  """"""
+  currency: String!
+
+  """"""
+  countryCode: String!
+
+  """"""
+  interval: Int!
+
+  """"""
+  amount: Int!
+
+  """"""
+  show: Boolean!
+
+  """"""
+  subscriptionLevel: SubscriptionLevel!
+
+  """"""
+  stripePlanId: String!
+
+  """"""
+  digitalAccess: Boolean!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  deletedAt: Time
+}
+
+""""""
+input WeeklygoalFilter {
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+
+  """"""
+  Week: Int
+
+  """"""
+  Year: Int
+
+  """"""
+  lifegoals: [ID]
+}
+
+""""""
+type OrganisationConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Organisation!]!
+}
+
+""""""
+type Podcast {
+  """"""
+  id: ID!
+
+  """URL Friendly slug that can be used as a unique identifier"""
+  slug: String!
+
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  image: Image
+
+  """"""
+  length: Int!
+
+  """"""
+  entryLevel: EntryLevelValue!
+
+  """"""
+  isFeatured: Boolean!
+
+  """"""
+  isFree: Boolean!
+
+  """"""
+  contentSegments: [ContentSegment!]!
+
+  """"""
+  episodes: [Episode!]!
+
+  """"""
+  experts: [Expert!]!
+
+  """"""
+  categories: [Category!]!
+
+  """"""
+  learningPaths(filter: LearningPathFilter!, sorting: SortOrdering): LearningPathConnection!
+
+  """"""
+  userContentTracking: UserContentTracking
+
+  """
+  Which organisation this event is available for. If no organisation then it's a public event
+  """
+  organisation: Organisation
+
+  """Which groups within an organisation this event is available for."""
+  organisationGroups: [OrganisationGroup!]!
+
+  """Retrieve content that is related to this content piece"""
+  relatedContent(limit: Int!): [ContentCard!]!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  publishedAt: Time
+
+  """Averge rating from 1-5 the content piece has received"""
+  rating: Float!
+
+  """The number of reviews the content piece as received"""
+  numberOfReviews: Int!
+
+  """The amount of time spent on by users"""
+  activityCount: Int! @deprecated(reason: "Use timeSpentOnByUsers insteads")
+
+  """The amount of time spent on by users"""
+  timeSpentOnByUsers: Int!
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]!
+
+  """The number of upvotes the content piece has received"""
+  upvoteCount: Int!
+
+  """The number of downvotes the content piece has received"""
+  downvoteCount: Int!
+
+  """Tells whether content is rated by user or not"""
+  contentRatingByUser: ContentVote!
+
+  """Comments on content"""
+  comments(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+
+  """"""
+  numberOfComments: Int!
+}
+
+""""""
+input OffsetPagination {
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+type SubscriptionConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [SubscriptionModel!]!
+}
+
+""""""
+type FeedEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  feed: FeedActivity!
+}
+
+""""""
+scalar Uint32
+
+""""""
+type Location {
+  """"""
+  name: String!
+
+  """"""
+  city: String!
+
+  """"""
+  coordinates: Coordinates!
+}
+
+""""""
+input UpdateUserMetaInput {
+  """"""
+  company: String!
+
+  """"""
+  jobTitle: String!
+
+  """"""
+  seniority: String!
+
+  """"""
+  joiningReason: String!
+}
+
+""""""
+input CouponFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  code: String
+
+  """"""
+  organisationId: String
+}
+
+""""""
+input CreateTeamsInput {
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  email: String!
+
+  """"""
+  telephone: String!
+
+  """"""
+  company: String!
+
+  """"""
+  teamSize: String!
+
+  """"""
+  department: String!
+
+  """"""
+  password: String!
+}
+
+""""""
+input CommunicationTemplateFilter {
+  """"""
+  name: String
+
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+type SearchableContentCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [SearchableContent!]!
+}
+
+""""""
+type FeedActivity {
+  """"""
+  id: ID!
+
+  """What kind of activity was performed"""
+  type: FeedActivityType!
+
+  """The author is the first person that performed the activity"""
+  author: User!
+
+  """
+  Other users that have performed the same action but after the initial "author"
+  """
+  contributors: [User!]!
+
+  """
+  A union of all the different content types that should match to the activity feed
+  """
+  content: FeedActivityContent!
+
+  """"""
+  numberOfLikes: Int!
+
+  """"""
+  numberOfComments: Int!
+
+  """The comments for the specific activity"""
+  comments(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """If the currently authenticated user has liked the activity"""
+  likedByUser: Boolean!
+
+  """When the activity was created"""
+  createdAt: Time!
+
+  """When the activity was last updated"""
+  updatedAt: Time!
+}
+
+""""""
+enum ContentType {
+  """"""
+  EBOOK
+
+  """"""
+  PODCAST
+
+  """"""
+  EVENT
+
+  """"""
+  EXPERT
+
+  """"""
+  STREAM
+
+  """"""
+  LEARNING_PATH
+}
+
+""""""
+type EventConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Event!]!
+}
+
+""""""
+input LocationInput {
+  """"""
+  name: String!
+
+  """"""
+  city: String!
+
+  """"""
+  coordinates: CoordinatesInput!
+}
+
+""""""
+type SubscriptionPlanConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [SubscriptionPlan!]!
+}
+
+""""""
+input CommentFilter {
+  """The number of items to return"""
+  limit: Int!
+
+  """Retrieve activities that happened before this timestamp"""
+  before: String
+
+  """Retrieve actiites that happened after this timestamp"""
+  after: String
+}
+
+""""""
+input CommunicationTemplateJourneyInput {
+  """Which step to update the onboarding journey for"""
+  step: CommunicationTemplateJourneys!
+
+  """
+  The ARN of the onboarding email to use, if null is provided then that entry is reset to the default value
+  """
+  arn: String
+}
+
+""""""
+input CuratedListFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+scalar Uint64
+
+""""""
+input TaxRateFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  country: String
+
+  """"""
+  active: Boolean
+
+  """"""
+  id: [ID]
+
+  """"""
+  inclusive: Boolean
+}
+
+""""""
+input SubscriptionPlanInput {
+  """"""
+  currency: String!
+
+  """"""
+  countryCode: String!
+
+  """"""
+  subscriptionLevel: String!
+
+  """"""
+  interval: Int!
+
+  """"""
+  amount: Int!
+
+  """"""
+  show: Boolean!
+}
+
+""""""
+input LearningPathInput {
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  contentSegments: [ContentSegmentInput!]
+
+  """"""
+  image: ID!
+
+  """"""
+  podcasts: [ID!]!
+
+  """"""
+  events: [ID!]!
+
+  """"""
+  ebooks: [ID!]!
+
+  """"""
+  streams: [ID!]!
+
+  """"""
+  categories: [ID!]!
+
+  """"""
+  featuredCategory: String
+
+  """"""
+  featuredLifegoal: String
+
+  """"""
+  isFree: Boolean
+
+  """"""
+  sortOrder: [ID!]!
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+
+  """
+  If not provided the existing value will be retained, else it controls if the content must be controlled in a serial
+  fashion or can be completed in any order
+  """
+  strictContentProgression: Boolean
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]
+}
+
+""""""
+type GraphDataPoint {
+  """"""
+  label: String!
+
+  """"""
+  value: Int!
+}
+
+""""""
+type Coupon {
+  """"""
+  code: String!
+
+  """"""
+  usedCharges: Int!
+
+  """"""
+  remainingCharges: Int!
+
+  """"""
+  restrictedContent: String
+
+  """"""
+  percentOff: Int!
+
+  """"""
+  duration: String!
+
+  """"""
+  durationInMonths: Int
+
+  """"""
+  restrictedSubscriptionLevel: SubscriptionLevel
+
+  """"""
+  restrictedSubscriptionDuration: Int
+
+  """"""
+  organisationId: ID
+
+  """"""
+  organisation: Organisation
+
+  """"""
+  userId: String
+
+  """"""
+  user: User
+
+  """"""
+  restrictedToFirstTimeUser: Boolean
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+input OrgStatisticsFilter {
+  """"""
+  from: Time
+
+  """"""
+  until: Time
+
+  """"""
+  frequency: OrgStatsGroupingFrequency
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type StreamConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Stream!]!
+}
+
+""""""
+type UserCreditCard {
+  """Expiration month of the credit card"""
+  expMonth: Int!
+
+  """Expiration year of the credit card"""
+  expYear: Int!
+
+  """
+  What type of card
+  
+  - credit
+  - debit
+  - prepaid
+  - unknown
+  """
+  funding: String!
+
+  """Last four digits of the credit card"""
+  last4: String!
+
+  """
+  Brand of credit card used
+  
+  - "American Express"
+  - "Discover"
+  - "Diners Club"
+  - "JCB"
+  - "MasterCard"
+  - "Unknown"
+  - "UnionPay"
+  - "Visa"
+  """
+  brand: String!
+
+  """Can either be apple_pay / google_pay or an empty string"""
+  tokenizationMethod: String!
+}
+
+""""""
+input UpdateUserLifegoalsInput {
+  """"""
+  lifegoals: [String!]
+}
+
+"""This presents all the content the user can consume"""
+union Content = Ebook | Event | Podcast | Stream
+
+""""""
+type ImageConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Image!]!
+}
+
+""""""
+type UserAssignmentContentStatistics {
+  """The ID of the content piece"""
+  contentId: ID!
+
+  """The name of the content piece"""
+  contentName: String!
+
+  """The estimated length of the content piece"""
+  contentLength: Int!
+
+  """The users progress in percent"""
+  completionRate: Float!
+}
+
+""""""
+enum UserRole {
+  """"""
+  admin
+
+  """"""
+  expert
+
+  """"""
+  user
+
+  """"""
+  guest
+
+  """"""
+  livestream
+
+  """"""
+  org_admin
+
+  """"""
+  org_livestream
+}
+
+""""""
+enum StreamStatus {
+  """
+  Newly created streams that are going to be used for live streams are created with this status
+  """
+  CREATED
+
+  """
+  A stream will transition into this status when startStream is called and user goes in backstage to 
+  test out their video etc before going live to the audience
+  """
+  BACKSTAGE
+
+  """
+  A stream will transition into this status when user is ready to go live an the agora UID is provided
+  """
+  LIVE
+
+  """
+  Finished is the status assigned to a live stream once the host(s) have stopped streaming
+  """
+  FINISHED
+
+  """
+  The status a stream has once it's been transition into a recording, it's also the default status for streams
+  that are not created to be live streams.
+  """
+  RECORDING
+}
+
+""""""
+type PieDataPoint {
+  """"""
+  id: ID!
+
+  """"""
+  label: String!
+
+  """"""
+  value: Int!
+}
+
+""""""
+type FollowUserSuggestions {
+  """"""
+  edges: [User!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+type EventWaitListAttendee {
+  """"""
+  id: ID!
+
+  """"""
+  user: User!
+
+  """"""
+  event: Event!
+
+  """"""
+  isAttending: Boolean!
+
+  """"""
+  questionnaireResponse: String!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  hiddenAt: Time
+}
+
+""""""
+type ChatMessage {
+  """"""
+  id: ID!
+
+  """"""
+  user: User!
+
+  """"""
+  message: String!
+
+  """"""
+  deletedAt: Time
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  chat: Chat!
+}
+
+""""""
+type ChatMessageConnection {
+  """"""
+  meta: CursorInfo!
+
+  """"""
+  edges: [ChatEdge!]!
+}
+
+""""""
+type CohortUser {
+  """"""
+  lastInvitedAt: Time!
+
+  """"""
+  nudgeEnabled: Boolean!
+
+  """"""
+  status: CohortInviteStatus!
+
+  """"""
+  user: User!
+}
+
+""""""
+enum CommentType {
+  """"""
+  CONTENT
+
+  """"""
+  FEED
+}
+
+""""""
+type CommunicationTemplate {
+  """Unique internal ID of the template"""
+  id: ID!
+
+  """AWS Identifier for the template"""
+  arn: String!
+
+  """Version of the template"""
+  version: String!
+
+  """
+  If the current template is active. The selected active version is that one that gets send to users when the arn is provided
+  """
+  isActive: Boolean!
+
+  """The name of the template"""
+  name: String!
+
+  """Description of the template and what it's used for"""
+  description: String!
+
+  """Subject of the email"""
+  subject: String!
+
+  """Html version of the template"""
+  html: String!
+
+  """Text version of the template"""
+  text: String!
+
+  """The JSON required for the bee plugin to build the editor"""
+  json: Map!
+
+  """When the template was created"""
+  createdAt: Time!
+
+  """When the tempalte was last updated"""
+  updatedAt: Time!
+
+  """Get different versions of the template"""
+  versions(pagination: OffsetPagination!): CommunicationTemplateConnection!
+}
+
+""""""
+input DefaultSubstitutionAttributes {
+  """"""
+  key: String!
+
+  """"""
+  val: String
+}
+
+""""""
+input ContentRatingInput {
+  """"""
+  rating: Float!
+
+  """"""
+  review: String
+
+  """"""
+  contentId: String!
+}
+
+""""""
+type Mutation {
+  """
+  This will return if the provided version of the mobile app (WITHOUT CodePUSH) is up to date
+  """
+  isAppUp2Date(appVersion: String!): Boolean!
+
+  """"""
+  createCoupon(input: CouponInput): Coupon
+
+  """"""
+  updateCoupon(code: String!, input: CouponInput): Coupon
+
+  """"""
+  deleteCoupon(code: String!): NoContent
+
+  """"""
+  consumeCoupon(code: String!): SubscriptionModel
+
+  """"""
+  userTrackContentProgress(id: String!, type: ContentType!, data: TrackingData!): ContentCard!
+
+  """"""
+  userTrackContentOpened(id: String!, type: ContentType!): ContentCard!
+
+  """"""
+  userTrackContentToggleFinished(id: String!, type: ContentType!): ContentCard!
+
+  """"""
+  userTrackContentToggleBookmarked(id: String!, type: ContentType!): ContentCard!
+
+  """"""
+  userTrackContentToggleAttending(id: String!): ContentCard!
+
+  """"""
+  createFeaturedContent(input: FeaturedContentInput): FeaturedContent
+
+  """"""
+  updateFeaturedContent(id: String!, input: FeaturedContentInput): FeaturedContent
+
+  """"""
+  deleteFeaturedContent(id: String!): NoContent!
+
+  """
+  Toggle following a collection allows the user to toggle the state of following a collection
+  
+  The third variable "force" is optional and if provided will set the toggle state to that value
+  """
+  userToggleFollowCollection(id: String!, collectionType: CollectionType!, force: Boolean): UserCollectionTracking
+
+  """"""
+  userMarkCollectionAsFinished(collection: UserCollectionTrackingInput!): NoContent!
+
+  """"""
+  upsertContentRating(input: ContentRatingInput!): NoContent!
+
+  """"""
+  createCategory(input: CategoryInput): Category
+
+  """"""
+  updateCategory(id: String!, input: CategoryInput): Category
+
+  """"""
+  deleteCategory(id: String!): String!
+
+  """"""
+  createEbook(input: EbookInput): Ebook
+
+  """"""
+  updateEbook(id: String!, input: EbookInput): Ebook
+
+  """"""
+  deleteEbook(id: String!): String!
+
+  """"""
+  createPodcast(input: PodcastInput): Podcast
+
+  """"""
+  updatePodcast(id: String!, input: PodcastInput): Podcast
+
+  """"""
+  deletePodcast(id: String!): String!
+
+  """"""
+  createEvent(input: EventInput): Event
+
+  """"""
+  updateEvent(id: String!, input: EventInput): Event
+
+  """"""
+  deleteEvent(id: String!): String!
+
+  """"""
+  createAssignment(organisationID: ID!, input: AssignmentInput): Assignment!
+
+  """"""
+  updateAssignment(id: ID!, input: AssignmentInput): Assignment!
+
+  """"""
+  deleteAssignment(id: ID!): Boolean!
+
+  """"""
+  applyToEventWaitList(input: ApplyToEventWaitListInput): EventWaitListAttendee!
+
+  """"""
+  toggleWaitListAttendee(id: String!): EventWaitListAttendee!
+
+  """"""
+  removeAttendee(userId: String!, eventId: String!): Event
+
+  """"""
+  cancelWaitlistApplication(eventId: String!): Event
+
+  """"""
+  createExpert(input: ExpertInput): Expert
+
+  """"""
+  updateExpert(id: String!, input: ExpertInput): Expert
+
+  """"""
+  deleteExpert(id: String!): String!
+
+  """"""
+  requestMentorship(expertId: String!, userId: String): NoContent!
+
+  """Associate an expert profile with a user account"""
+  associateExpertToUserAccount(expertId: ID!, userId: ID!): Expert
+
+  """"""
+  toggleContentAsFree(id: ID!, contentType: ContentType!): NoContent!
+
+  """"""
+  toggleLearningPathAsFree(id: ID!): NoContent!
+
+  """"""
+  createLifegoal(input: LifegoalInput): Lifegoal
+
+  """"""
+  updateLifegoal(id: String!, input: LifegoalInput): Lifegoal
+
+  """"""
+  deleteLifegoal(id: String!): NoContent!
+
+  """"""
+  createCuratedList(input: CuratedListInput): CuratedList
+
+  """"""
+  updateCuratedList(id: String!, input: CuratedListInput): CuratedList
+
+  """"""
+  deleteCuratedList(id: String!): NoContent!
+
+  """"""
+  createLearningPath(input: LearningPathInput): LearningPath
+
+  """"""
+  updateLearningPath(id: String!, input: LearningPathInput): LearningPath
+
+  """"""
+  deleteLearningPath(id: String!): NoContent!
+
+  """"""
+  createOrganisation(input: OrganisationInput!): Organisation
+
+  """"""
+  updateOrganisation(id: String!, input: OrganisationInput!): Organisation
+
+  """"""
+  deleteOrganisation(id: String!): NoContent!
+
+  """"""
+  organisationAddUser(userId: String!, organisationId: String!, role: OrganisationRole!, level: SubscriptionLevel!): NoContent
+
+  """"""
+  organisationRemoveUser(userId: String!, organisationId: String!): NoContent
+
+  """"""
+  createOrganisationGroup(orgId: String!, input: OrganisationGroupInput!): OrganisationGroup
+
+  """"""
+  updateOrganisationGroup(id: String!, input: OrganisationGroupInput!): OrganisationGroup
+
+  """"""
+  deleteOrganisationGroup(id: String!): NoContent
+
+  """"""
+  organisationGroupAddUser(userId: String!, groupId: String!): NoContent
+
+  """"""
+  organisationGroupAddMultipleUser(userIds: [String!]!, groupId: String!): NoContent
+
+  """"""
+  organisationGroupRemoveUser(userId: String!, groupId: String!): NoContent
+
+  """
+  Import users in a batch
+  
+  If the users are not added to the organisation using the batch import it is because they
+  most likely already exist in the system. And for security purposes they cannot be added to the organisation
+  by a mear user.
+  """
+  organisationImportUsers(orgId: String!, groupId: String, subscription: SubscriptionLevel!, users: [OrganisationUserImport!]!): Organisation
+
+  """Join an organisation by using an invite link with a token"""
+  organisationJoinViaInviteLink(token: ID!, user: CreateUserInput): Boolean!
+
+  """"""
+  createUser(input: CreateUserInput): User
+
+  """Update user is called from the application to update the users profile"""
+  updateUser(id: String!, input: UpdateUserInput): User
+
+  """
+  Update a user as an org admin gives the ability to promote to a livestream host and thinkfluencer
+  """
+  updateUserAsOrgAdmin(id: ID!, input: UpdateUserAsOrgAdmin!): User!
+
+  """
+  Introduce a new method that allows us to update a user and thinkfluencer settings in the same request
+  """
+  updateUserAsAdmin(id: ID!, input: UpdateExpertUserInput!): User!
+
+  """Update information about the user after they have joined tigerhall"""
+  updateUserMeta(id: ID!, input: UpdateUserMetaInput): User!
+
+  """Delete a user from the platform"""
+  deleteUser(id: String, reasons: [String!]): NoContent!
+
+  """Update a users life goals"""
+  updateUserLifegoals(lifeGoals: [ID!]!): NoContent!
+
+  """Manage the service associated to a user for push notifications"""
+  manageUserDevices(operation: DeviceOperation!, deviceId: String!): NoContent!
+
+  """Reply to the persona question with a boolean value"""
+  personaQuestionReply(id: ID!, result: Boolean!): Boolean! @deprecated(reason: "Dont use this anymore")
+
+  """"""
+  resetPasswordInitiate(email: String!): NoContent!
+
+  """"""
+  resetPasswordFinalize(input: ResetPasswordFinalizeInput!): NoContent!
+
+  """"""
+  userChangePassword(id: String!, input: UserChangePasswordInput!): NoContent!
+
+  """"""
+  userSetPassword(id: ID!, password: String!): Boolean!
+
+  """"""
+  userToggleFollowExpert(id: String!, expertId: String!): Expert
+
+  """"""
+  userToggleBlockedState(id: String!): User
+
+  """"""
+  userSubscribeToPlan(userId: String, planId: String!, stripeToken: String!, trial: Boolean, coupon: String): NoContent!
+
+  """"""
+  userChangeSubscription(userId: String, planId: String!, coupon: String): User
+
+  """"""
+  userCancelSubscription(userId: String, reasons: [String!]!): User
+
+  """"""
+  userChangePaymentToken(userId: String, stripeToken: String!): User
+
+  """"""
+  isCouponValid(planId: String!, coupon: String!): IsCouponValid!
+
+  """"""
+  skipSubscriptionTrial(userId: String): User
+
+  """"""
+  createWeeklygoal(input: WeeklygoalInput): Weeklygoal
+
+  """"""
+  upsertWeeklyGoals(input: [WeeklygoalInput!]): NoContent!
+
+  """"""
+  updateWeeklygoal(id: String!, input: WeeklygoalInput): Weeklygoal
+
+  """"""
+  deleteWeeklygoal(id: String!): NoContent!
+
+  """"""
+  createSubscriptionPlan(input: SubscriptionPlanInput): SubscriptionPlan
+
+  """"""
+  updateSubscriptionPlan(id: String!, input: SubscriptionPlanInput): SubscriptionPlan
+
+  """"""
+  deleteSubscriptionPlan(id: String!): NoContent!
+
+  """Create tigerhall teams user account and organisation"""
+  createTeamsAccount(input: CreateTeamsInput): CreateTeamsResult
+
+  """
+  After creating the organisation they need to select their initial subscription.
+  
+  Subsequent management of the subscription is handled by stripes customer portal.
+  """
+  setInitialTeamsSubscription(input: SetInitialTeamsSubscription): Boolean!
+
+  """Create content user note"""
+  createContentUserNote(contentId: ID!, input: CreateContentUserNote): ContentUserNote!
+
+  """Update an existing content user note"""
+  updateContentUserNote(noteId: ID!, input: UpdateContentUserNote): ContentUserNote!
+
+  """Delete an existing content user note"""
+  deleteContentUserNote(noteId: ID!): Boolean!
+
+  """
+  Login with facebook will create a new account if no user with the provided facebook id exists
+  """
+  loginFB(token: String!): AuthenticationResponse
+
+  """
+  Login with email with authenticate the request against an existing account
+  
+  If backoffice is provided and the user has the correct permissions the JWT will be generated with a nil organisation
+  """
+  loginEmail(email: String!, password: String!, backoffice: Boolean): AuthenticationResponse
+
+  """
+  Login with linkedin will verify the authorization code (NOT Access token) against the linkedin API.
+  """
+  loginLinkedIn(token: String!): AuthenticationResponse
+
+  """
+  Login with apple will verify the authentication nonce and either create an account or login based on an existing account
+  
+  Note: Apple will only return the first & last name on the first authentication in the mobile app
+  so on the following request we can simple call this method with an empty string, calling it with null will break it.
+  
+  CustomBundleId changes which clientId we should use to generate and validate the authorizationCode against apple
+  """
+  loginApple(authorizationCode: String!, firstName: String!, lastName: String!, customBundleId: String): AuthenticationResponse
+
+  """
+  Reauthorize with organisation will create a new JWT associated to the provided organisation ID if the user has
+  the permissioned to do so
+  """
+  reauthorizeWithOrg(id: ID!): AuthenticationResponse!
+
+  """Check if the email, well actually if the domain is sso enabled"""
+  isSSOEnabled(email: String!): Boolean!
+
+  """Create a stream using a preexisting video"""
+  createStream(input: StreamInput!): Stream
+
+  """
+  Create a stream with an upload works in the same as as he regular create stream but uses the uploaded file
+  """
+  createStreamWithUpload(input: StreamInput!, file: Upload!): Stream
+
+  """
+  Create a live stream and if an organisation is specified then it's restricted to that organisation
+  """
+  createLiveStream(name: String!, invitedHosts: [ID!]!, organisationID: ID, organisationGroups: [ID!], featuredHost: ID): Stream!
+
+  """
+  To update livestream details while it's in progress i.e backstage and it publish the updated changes of stream which can be subsribed to
+  via ongoingStreams or streams subscription
+  """
+  updateLiveStream(id: ID!, input: LiveStreamInput!): Stream
+
+  """
+  Update a stream, should only be used for updating properties of a recorded stream
+  """
+  updateStream(id: String!, input: StreamInput!): Stream
+
+  """Delete a stream, remove a stream from the system"""
+  deleteStream(id: String!): String!
+
+  """
+  Start stream, This should be called after creating a live stream once we have figured out the Agora UID
+  """
+  startStream(streamId: ID!, uid: Int!, goToBackStage: Boolean): Stream!
+
+  """
+  streamGoLive, This should be called after starting live stream and when hosts are in holding area
+  and ready to go live
+  """
+  streamGoLive(streamId: ID!, uid: Int!): Stream!
+
+  """Stop stream, This should be called to stop a live stream"""
+  stopStream(streamId: ID!): Boolean!
+
+  """
+  When a user joins a stream and they are invited to join as a host then this is the API call tha makes them visible
+  
+  todo: rename this method to better match what it does
+  """
+  addHost(streamId: ID!, uid: Int!): Stream!
+
+  """Remove a host from the live stream"""
+  removeHost(streamId: ID!, uid: Int!, hostId: ID): Stream!
+
+  """Swap the order of two hosts in a stream"""
+  swapHost(streamId: ID!, order: Int!, newOrder: Int!): Stream!
+
+  """updates the featured host"""
+  setFeaturedHost(streamId: ID!, hostId: ID!): Stream!
+
+  """
+  updates the livestream creator. Super admin / creator can pass the creator rights to other host.
+  Once the creator is updated, the previous creator can even leave the stream if they want to
+  """
+  updateStreamCreator(streamId: ID!, newCreatorId: ID!): Stream!
+
+  """Send a chat message to a live stream"""
+  streamPostMessage(input: StreamChatMessageInput): Boolean!
+
+  """
+  To add new hosts to the livestream and send them notification to join it.
+  """
+  invitesAddHosts(streamID: ID!, hosts: [ID!]!): Boolean!
+
+  """"""
+  invitesRemoveHost(streamID: ID!, userID: ID!): Boolean! @deprecated(reason: "Use removeHost mutation")
+
+  """"""
+  invitesReject(streamID: ID!): Boolean!
+
+  """To send the invitation reminder to host for joining the livestream"""
+  inviteHost(streamID: ID!, hostID: ID!): Boolean!
+
+  """
+  This mutation is used to track clicks on content based on the recommendation id  and query string from a search result when using contentCards
+  """
+  searchResultClicked(input: ClickAnalyticsInput!): Boolean!
+
+  """This mutation is used to add poll questions"""
+  createPollQuestion(input: PollQuestionInput!): PollQuestionResponse!
+
+  """This mutation is used to update poll question"""
+  updatePollQuestion(id: ID!, input: PollQuestionInput!): PollQuestionResponse!
+
+  """This mutation is used to delete poll question"""
+  deletePollQuestion(id: ID!): Boolean!
+
+  """Allow submitting suggestions to the content / marketing team"""
+  suggestNewPoll(input: PollSuggestion!): Boolean!
+
+  """This mutation is used to follow unfollow other user"""
+  userToggleFollow(personToFollow: ID!): User!
+
+  """This mutation to add answer to question"""
+  addAnswerToPollQuestion(input: PollQuestionAnswer!): Boolean! @deprecated(reason: "Use addAnswerToPollQuestionV2 instead it will return answer opiton object in return")
+
+  """
+  This mutation to add answer to question v2 which return answer options object
+  """
+  addAnswerToPollQuestionV2(input: PollQuestionAnswer!): PollQuestionResponse!
+
+  """
+  This mutation to reset given poll question answer so that user can change it's answer later
+  """
+  resetPollQuestionAnswer(questionId: ID!): Boolean!
+
+  """Upload an image"""
+  uploadImage(image: Upload!): Image
+
+  """Delete an image"""
+  deleteImage(id: String!): NoContent!
+
+  """Add a comment"""
+  createComment(comment: PostComment!): Comment!
+
+  """Rate a content piece, can either be UPVOTE, DOWNVOTE, UNDETERMINED"""
+  rateContent(contentId: ID!, vote: ContentVote!): ContentRating!
+
+  """delete a comment"""
+  deleteComment(comment: ID!): Boolean!
+
+  """update a comment"""
+  updateComment(update: UpdateComment!): Comment!
+
+  """Creates new email template"""
+  createCommunicationTemplate(input: CommunicationTemplateInput!): CommunicationTemplate!
+
+  """
+  Update email template
+  
+  Variable "createNewVersion" specifies whether to save the updates as a new version of the template or not.
+  """
+  updateCommunicationTemplate(id: ID!, createNewVersion: Boolean!, input: CommunicationTemplateInput!): CommunicationTemplate!
+
+  """
+  For AWS pinpoint to change the version of a template we need to specify it as the active version
+  """
+  activateCommunicationTemplateVersion(id: ID!): CommunicationTemplate!
+
+  """
+  toggleLike like a activity base on type and return activity in return
+  this works as generic function to like any activity
+  right now supports comment and feed will extends this mutation further in future
+  """
+  toggleLike(referenceId: ID!, type: LikeType!): LikeableContent!
+
+  """
+  To override the default template for an organisation for a particular step in automated communication journey
+  """
+  updateOrganisationOnboardingTemplate(orgID: ID!, input: CommunicationTemplateJourneyInput!): Organisation!
+
+  """Toggle a user as an expert"""
+  toggleUserAsExpert(id: ID!): User!
+
+  """creates a new trail cohort"""
+  createCohort(input: CreateCohortInput!): Cohort!
+
+  """"""
+  leaveCohort(cohortId: ID!): Boolean!
+
+  """removes a user from the cohort, can be removed by creator or admins"""
+  removeCohortUser(cohortId: ID, userIds: [ID!]!): Cohort!
+
+  """
+  nudgeCohortUser send notification to user to accept or reject cohort invitation
+  """
+  nudgeCohortUser(cohortId: ID!, userId: ID!): Cohort!
+
+  """add new users to the cohort"""
+  addCohortMembers(cohortId: ID!, users: [ID!]!): Cohort!
+
+  """updates the invitation status of cohort"""
+  updateCohortInvitationStatus(cohortId: ID!, status: CohortInviteStatus!): Cohort!
+
+  """
+  createChatMessage id represent target content id for which people are talking about
+  """
+  createChatMessage(id: ID!, message: String!): ChatMessage!
+
+  """"""
+  disbandCohort(cohortId: ID!): Boolean!
+
+  """
+  userInAppSubscription verify in-app purchase and store transaction details in our system
+  """
+  userInAppSubscription(input: UserInAppSubscriptionInput!): NoContent!
+}
+
+""""""
+enum OrganisationCustomerType {
+  """"""
+  TEAMS
+
+  """"""
+  ENTERPRISE
+}
+
+""""""
+enum OrgStatsGroupingFrequency {
+  """"""
+  day
+
+  """"""
+  week
+
+  """"""
+  month
+
+  """"""
+  quarter
+
+  """"""
+  year
+}
+
+""""""
+type CuratedListConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [CuratedList!]!
+}
+
+""""""
+input CategoryInput {
+  """"""
+  name: String!
+
+  """"""
+  image: ID!
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type FeaturedContent {
+  """"""
+  id: ID!
+
+  """"""
+  isFree: Boolean!
+
+  """"""
+  content: ContentCard
+
+  """"""
+  header: String!
+
+  """"""
+  paragraph: String!
+
+  """"""
+  image: Image
+
+  """"""
+  screen: String!
+
+  """"""
+  screenParams: Map!
+
+  """"""
+  linkToURL: String!
+
+  """"""
+  promotedFrom: String!
+
+  """"""
+  promotedUntil: String!
+
+  """"""
+  organisation: Organisation
+
+  """"""
+  organisationGroups: [OrganisationGroup!]!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+type LearningPath {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  contentSegments: [ContentSegment!]!
+
+  """"""
+  isFree: Boolean
+
+  """"""
+  image: Image
+
+  """"""
+  ebooks: [Ebook!]!
+
+  """"""
+  podcasts: [Podcast!]!
+
+  """"""
+  events: [Event!]!
+
+  """"""
+  streams: [Stream!]!
+
+  """
+  All the content cards associated to the learning path exposed under a single field and correctly sorted
+  """
+  contentCards: [ContentCard!]!
+
+  """"""
+  categories: [Category!]!
+
+  """"""
+  featuredCategory: Category
+
+  """"""
+  featuredLifegoal: Lifegoal
+
+  """"""
+  sortOrder: [ID!]!
+
+  """"""
+  organisation: Organisation
+
+  """"""
+  organisationGroups: [OrganisationGroup!]!
+
+  """"""
+  userCollectionTracking: UserCollectionTracking
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  numberOfComments: Int!
+
+  """
+  If strict content progression is "true" then the content must be consumed in a serial fashion starting with the first
+  and ending with the last content piece
+  """
+  strictContentProgression: Boolean!
+
+  """Retrieve the associated cohorts that are part of this learning path"""
+  cohorts(filter: LearningPathCohortFilter, pagination: CursorPaginationInput): CohortConnection
+
+  """
+  Pending cohort invites for user to accept/reject on the given learning path
+  """
+  pendingCohortInvites: Int!
+}
+
+""""""
+input TrackingData {
+  """"""
+  total: Int!
+
+  """"""
+  current: Int!
+
+  """"""
+  currentPlacement: Int!
+}
+
+""""""
+type ContentRating {
+  """"""
+  id: ID!
+
+  """"""
+  user: User!
+
+  """"""
+  rating: Float!
+
+  """"""
+  review: String
+
+  """"""
+  vote: ContentVote!
+
+  """"""
+  content: ContentCard!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time
+}
+
+""""""
+type Chapter {
+  """"""
+  name: String!
+
+  """"""
+  index: Int!
+
+  """"""
+  pages: [String!]!
+}
+
+""""""
+scalar Map
+
+""""""
+input StreamInput {
+  """Name of the stream"""
+  name: String!
+
+  """A brief introduction to the topic"""
+  preamble: String!
+
+  """The image that the stream should have"""
+  image: ID!
+
+  """In-depth description of the stream"""
+  contentSegments: [ContentSegmentInput!]!
+
+  """How long the stream is"""
+  length: Int!
+
+  """Experts that are part of this content piece"""
+  experts: [ID!]!
+
+  """Which categories are related to this stream"""
+  categories: [ID!]!
+
+  """Level of the content being discussed"""
+  entryLevel: EntryLevelValue!
+
+  """When the stream should be published"""
+  publishedAt: Time
+
+  """A signed video url used to play the video"""
+  videoUrl: String!
+
+  """If the stream should only be visible by a single organisation"""
+  organisationID: ID
+
+  """If only specific groups within the organisation should see the video"""
+  organisationGroups: [ID!]
+
+  """If the video is free to watch"""
+  isFree: Boolean
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]
+
+  """
+  Tags represents hash tags which will be attached to content for better search and better content delivery
+  """
+  tags: [String!]
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+}
+
+""""""
+type AuthenticationResponse {
+  """
+  The JWT access token that should be used in sub-sequence api requests to authenticate the user
+  """
+  jwt: String!
+
+  """The user ID"""
+  userId: ID!
+
+  """
+  If the authentication is unsuccessful this message will contain the reason why
+  """
+  message: String!
+
+  """If the request was successful"""
+  success: Boolean!
+
+  """
+  If this is the first time a user logs into the platform.
+  
+  This is generally used in conjunction with 3rd party authentication so that we know if they should
+  proceed with the onboarding process.
+  """
+  newAccount: Boolean!
+
+  """
+  Finished registration represents if the user has finished the registration process
+  
+  For tigerhall teams this represents if the user has selection a subscription plan interval and provided
+  the credit card credentials for the initial subscription/trial
+  """
+  finishedRegistration: Boolean!
+}
+
+""""""
+enum OrganisationRole {
+  """"""
+  MEMBER
+
+  """"""
+  ADMIN
+}
+
+""""""
+type UserContentTracking {
+  """"""
+  id: ID!
+
+  """"""
+  EventId: String
+
+  """"""
+  EbookId: String
+
+  """"""
+  PodcastId: String
+
+  """"""
+  StreamId: String
+
+  """"""
+  total: Int!
+
+  """"""
+  current: Int!
+
+  """"""
+  currentPlacement: Int!
+
+  """"""
+  isFinished: Boolean!
+
+  """"""
+  isAttending: Boolean!
+
+  """"""
+  isFavorite: Boolean!
+
+  """"""
+  isBookmarked: Boolean!
+
+  """"""
+  userRating: Float
+
+  """Retrieve a users notes on the content card"""
+  notes(filter: ContentUserNoteFilter!): NotesConnection!
+
+  """"""
+  finishedAt: Time
+
+  """"""
+  checkedInAt: Time
+
+  """"""
+  lastOpenedAt: Time
+
+  """"""
+  bookmarkedAt: Time
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  createdAt: Time!
+}
+
+""""""
+type Subscription {
+  """Subscribe to the chat messages of a stream"""
+  chatMessages(streamId: ID!): StreamChatMessage
+
+  """
+  This subscription pushes out all the on-going live streams that are currently live
+  """
+  onGoingStreams: [Stream!]!
+
+  """Subscribe to a specific live stream to receive all the updates from it"""
+  stream(id: ID!): Stream
+
+  """Subscribe to the chat messages generic method"""
+  chatMessagesV2(id: ID!): ChatMessage
+}
+
+""""""
+input CategoryFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type Comment {
+  """"""
+  id: ID!
+
+  """"""
+  user: User!
+
+  """"""
+  parent: Comment
+
+  """"""
+  comment: String!
+
+  """"""
+  numberOfLikes: Int!
+
+  """"""
+  numberOfReplies: Int!
+
+  """"""
+  lastReply: Comment
+
+  """"""
+  deletedAt: Time
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  content: ContentCard
+
+  """"""
+  replies(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """Retrieve all the users who liked a specific comment"""
+  usersLikedTheComment(limit: Int!, offset: Int!, sorting: SortOrdering): UserCollection!
+
+  """This presents if the user has rated the comment"""
+  userCommentRating: CommentRating!
+
+  """"""
+  belongTo: CommentableContent!
+}
+
+""""""
+type Event {
+  """"""
+  id: ID!
+
+  """URL Friendly slug that can be used as a unique identifier"""
+  slug: String!
+
+  """Name of the event"""
+  name: String!
+
+  """Short description of the event"""
+  preamble: String!
+
+  """The image that portrais this event"""
+  image: Image
+
+  """
+  The levelt of the content being discussed such as beginner, advanced, experts etc
+  """
+  entryLevel: EntryLevelValue!
+
+  """Which type of event this is"""
+  eventType: EventType!
+
+  """The max number of attendees an event can have"""
+  maxAttendees: Int!
+
+  """If the event is currently featured"""
+  isFeatured: Boolean! @deprecated(reason: "We don't know why this exists")
+
+  """If the event is free"""
+  isFree: Boolean!
+
+  """Extended information about the event"""
+  contentSegments: [ContentSegment!]!
+
+  """The price of a single ticket purchase"""
+  ticketPrice: Int! @deprecated(reason: "We no longer support single ticket purcases in the app")
+
+  """Single purchase ticket currency"""
+  ticketCurrency: String! @deprecated(reason: "We no longer support single ticket purcases in the app")
+
+  """Users on the wait list"""
+  waitList(withHidden: Boolean!): [EventWaitListAttendee!]!
+
+  """If the wait list is enabled"""
+  waitListEnabled: Boolean!
+
+  """
+  If the waitlist is enabled then this is the questions the users need to reply to when signing up
+  """
+  questionnaire: String!
+
+  """
+  The required subscription level to attend this event
+  
+  Our more expensive events such as dinners with experts cost us more money to arrange so we need to restrict
+  this to users that are paying for it.
+  """
+  requiredSubscriptionLevel: SubscriptionLevel!
+
+  """Experts that are hosting this event"""
+  experts: [Expert!]!
+
+  """Categories related to this event"""
+  categories: [Category!]!
+
+  """Trails related to this event"""
+  learningPaths(filter: LearningPathFilter!, sorting: SortOrdering): LearningPathConnection!
+
+  """User content tracking related to the event"""
+  userContentTracking: UserContentTracking
+
+  """Geo location for opening google maps etc"""
+  location: Location
+
+  """A shorter version of the location that we use to display in the app"""
+  locationDisplayName: String
+
+  """If the event is a online event"""
+  isOnline: Boolean!
+
+  """If the event is online the conference url should be provided"""
+  conferenceUrl: String
+
+  """What time the event starts"""
+  startsAt: Time
+
+  """What time the event is finished"""
+  endsAt: Time
+
+  """When the event should be published"""
+  publishedAt: Time
+
+  """The attendees of an event"""
+  attendees: [User]!
+
+  """The number of users attending an event"""
+  attendeeCount: Int!
+
+  """
+  Which organisation this event is available for. If no organisation then it's a public event
+  """
+  organisation: Organisation
+
+  """Which groups within an organisation this event is available for."""
+  organisationGroups: [OrganisationGroup!]!
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]!
+
+  """Retrieve content that is related to this content piece"""
+  relatedContent(limit: Int!): [ContentCard!]!
+
+  """When the event was created"""
+  createdAt: Time!
+
+  """When the event was last updated"""
+  updatedAt: Time!
+
+  """The number of upvotes the content piece has received"""
+  upvoteCount: Int!
+
+  """The number of downvotes the content piece has received"""
+  downvoteCount: Int!
+
+  """Tells whether content is rated by user or not"""
+  contentRatingByUser: ContentVote!
+
+  """Comments on content"""
+  comments(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+
+  """"""
+  numberOfComments: Int!
+}
+
+""""""
+type MonthlyPromotedLearningPath {
+  """"""
+  learninPath: LearningPath
+
+  """"""
+  description: String!
+}
+
+""""""
+type Query {
+  """"""
+  category(id: String!): Category
+
+  """"""
+  categories(filter: CategoryFilter, sorting: SortOrdering): CategoryConnection!
+
+  """"""
+  coupon(code: String!): Coupon!
+
+  """"""
+  coupons(filter: CouponFilter, sorting: SortOrdering): CouponConnection
+
+  """"""
+  contentCard(id: ID, slug: String, contentType: ContentType): ContentCard!
+
+  """"""
+  contentCards(filter: ContentCardsFilter, sorting: ContentCardsSorting, tags: [String!]): ContentConnection!
+
+  """"""
+  contentRating(contentId: String!, sorting: SortOrdering): ContentRatingConnection!
+
+  """Retrieve a comment by it's ID"""
+  comment(id: ID!): Comment!
+
+  """"""
+  getLearningPathsByUserTracking(filter: UserCollectionTrackingFilter, sorting: SortOrdering): LearningPathConnection!
+
+  """"""
+  curatedList(id: String!): CuratedList
+
+  """"""
+  curatedLists(filter: CuratedListFilter, sorting: SortOrdering): CuratedListConnection!
+
+  """"""
+  event(id: String, slug: String): Event
+
+  """"""
+  events(filter: EventFilter, sorting: SortOrdering): EventConnection!
+
+  """"""
+  ebook(id: String, slug: String): Ebook
+
+  """"""
+  ebooks(filter: EbookFilter, sorting: SortOrdering): EbookConnection!
+
+  """"""
+  expert(id: String, slug: String): Expert
+
+  """"""
+  experts(filter: ExpertFilter, sorting: SortOrdering): ExpertCollection!
+
+  """"""
+  featuredContent(id: String!): FeaturedContent
+
+  """"""
+  featuredContentEntries(filter: FeaturedContentFilter, sorting: SortOrdering): FeaturedContentConnection!
+
+  """"""
+  images(filter: ImageFilter, sorting: SortOrdering): ImageConnection!
+
+  """"""
+  image(id: String!): Image
+
+  """"""
+  learningPath(id: String!): LearningPath
+
+  """"""
+  learningPaths(filter: LearningPathFilter, sorting: SortOrdering): LearningPathConnection!
+
+  """
+  The promoted learning path of this month
+  
+  Note: This is nullable
+  """
+  promotedLearningPathOfTheMonth: MonthlyPromotedLearningPath
+
+  """"""
+  lifegoal(id: String!): Lifegoal
+
+  """"""
+  lifegoals(filter: LifegoalFilter, sorting: SortOrdering): LifegoalCollection!
+
+  """"""
+  me: User
+
+  """"""
+  organisation(id: String!): Organisation
+
+  """"""
+  organisations(filter: OrganisationFilter, sorting: SortOrdering): OrganisationConnection!
+
+  """"""
+  organisationGroup(id: String!): OrganisationGroup
+
+  """"""
+  podcast(id: String, slug: String): Podcast
+
+  """"""
+  podcasts(filter: PodcastFilter, sorting: SortOrdering): PodcastConnection!
+
+  """Get all the persona questions for evaluation"""
+  personaQuestions: [PersonaQuestion!]! @deprecated(reason: "Dont use this anymore")
+
+  """"""
+  stream(id: String, slug: String): Stream
+
+  """"""
+  streams(filter: StreamFilter, sorting: SortOrdering): StreamConnection!
+
+  """"""
+  streamChatMessage(id: String!): StreamChatMessage
+
+  """"""
+  streamChatMessages(id: String!): [StreamChatMessage]!
+
+  """"""
+  subscriptions(filter: SubscriptionFilter, sorting: SortOrdering): SubscriptionConnection!
+
+  """"""
+  subscriptionPlan(id: String!): SubscriptionPlan!
+
+  """"""
+  subscriptionPlans(filter: SubscriptionPlanFilter, sorting: SortOrdering): SubscriptionPlanConnection!
+
+  """"""
+  user(id: String!): User
+
+  """"""
+  users(filter: UserFilter, sorting: SortOrdering): UserCollection!
+
+  """"""
+  weeklyGoal(id: String!): Weeklygoal
+
+  """"""
+  weeklyGoalsByWeek(week: Int!): WeeklygoalCollection!
+
+  """"""
+  weeklyGoals(filter: WeeklygoalFilter, sorting: SortOrdering): WeeklygoalCollection!
+
+  """"""
+  activeWeeklyGoals: WeeklygoalCollection!
+
+  """"""
+  currentlyFeaturedContent: ContentCard @deprecated(reason: "Dont use this because we now have an array of featured content in the app")
+
+  """"""
+  currentlyFeaturedContentWithConfig: CurrentlyFeaturedContent @deprecated(reason: "Dont use this because we now have an array of featured content in the app")
+
+  """
+  QuerySuggestion This will help you to get query suggestion on heading and content fields
+  """
+  querySuggestion(query: String!): [String!]!
+
+  """Retrieve a specific poll question by it's unique id"""
+  pollQuestion(id: ID!): PollQuestionResponse!
+
+  """Retrieve all the metadata questions to ask the users"""
+  pollQuestions(filter: PollQuestionFilter): PollQuestionConnection!
+
+  """
+  A list of suggestion onboarding content that we display to the users when they first login to tigerhall
+  """
+  suggestedOnBoardingContent: ContentConnection!
+
+  """user follow suggestion"""
+  suggestedUsersToFollow(filter: SuggestedUsersToFollowFilter!): FollowUserSuggestions!
+
+  """List of tax rates for admin available with different filters"""
+  taxRates(filter: TaxRateFilter): TaxRateConnection!
+
+  """Retrieve all the tax rates available for the user's CF countryCode"""
+  userTaxRates: TaxRateConnection!
+
+  """"""
+  feed(filter: FeedFilter!): FeedConnection
+
+  """Retrieve a communication template by it's ID"""
+  communicationTemplate(id: ID!): CommunicationTemplate!
+
+  """
+  Retrieve all the available communication templates based on input provided
+  """
+  communicationTemplates(filter: CommunicationTemplateFilter!): CommunicationTemplateConnection!
+
+  """Retrieve all the versions of specific Communication template"""
+  commentsSurroundingID(commentId: ID!, beforeLimit: Int, afterLimit: Int): CommentCursorConnection!
+
+  """Fetch all the overriden communication templates for an organisation"""
+  overriddenCommunicationTemplatesForOrg(orgId: ID): CommunicationTemplateJourneyConnection!
+
+  """"""
+  feedById(id: ID!): FeedActivity!
+
+  """
+  A group of users i.e cohort that are going on a trail together, a user can be part of multiple cohorts that do the same trail
+  """
+  cohort(id: ID!): Cohort!
+
+  """"""
+  cohorts(filter: CohortFilter, pagination: CursorPaginationInput): CohortConnection!
+
+  """
+  TODO: Need confirmation from nellie what will be the filter to list users
+  """
+  suggestUsersForCohort(cohortId: ID, filter: CohortInviteUserListFilter, pagination: OffsetPagination): UserCollection
+
+  """Return specific timeline details for the cohort"""
+  timelineEntry(id: ID!): Timeline!
+
+  """Retrieve a comment by it's ID"""
+  chat(id: ID!): Chat!
+}
+
+""""""
+type Coordinates {
+  """"""
+  lat: String!
+
+  """"""
+  lon: String!
+}
+
+""""""
+input ClickAnalyticsInput {
+  """"""
+  query: String!
+
+  """"""
+  documentID: String!
+
+  """"""
+  requestID: String
+
+  """"""
+  tags: [String!]
+}
+
+""""""
+enum ShowOnScreenType {
+  """"""
+  ONBOARDING
+
+  """"""
+  DAILYPOLLS
+}
+
+""""""
+input PollSuggestion {
+  """"""
+  suggestion: String!
+}
+
+""""""
+enum DeviceOperation {
+  """"""
+  ADD
+
+  """"""
+  REMOVE
+}
+
+""""""
+input LiveStreamInput {
+  """Name of the livestream"""
+  name: String!
+
+  """If the stream should only be visible by a single organisation"""
+  organisationID: ID
+
+  """If only specific groups within the organisation should see the video"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type TaxRateConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [TaxRate!]!
+}
+
+""""""
+input UserChangePasswordInput {
+  """"""
+  oldPassword: String!
+
+  """"""
+  newPassword: String!
+}
+
+""""""
+type CommunicationTemplateConnection {
+  """"""
+  edges: [CommunicationTemplate!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+input ImageFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  name: String
+
+  """"""
+  organisationID: [ID!]
+}
+
+""""""
+input OrganisationGroupInput {
+  """"""
+  name: String!
+}
+
+""""""
+type OrgStatsMostPopularContent {
+  """"""
+  contentId: ID!
+
+  """"""
+  contentType: ContentType!
+
+  """"""
+  contentName: String!
+
+  """"""
+  averageCompletionRate: Float!
+
+  """"""
+  numberOfUsers: Int!
+
+  """"""
+  timeSpentInSeconds: Int!
+}
+
+""""""
+input PollQuestionAnswer {
+  """The question id displayed to the user"""
+  questionId: ID!
+
+  """The answer provided by the user"""
+  answerId: ID!
+}
+
+""""""
+type NotesConnection {
+  """"""
+  edges: [ContentUserNote!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+input CoordinatesInput {
+  """"""
+  lat: String!
+
+  """"""
+  lon: String!
+}
+
+""""""
+enum SubscriptionLevel {
+  """"""
+  FREE
+
+  """"""
+  DIGITAL_ACCESS
+
+  """"""
+  COMMUNITY_ACCESS
+
+  """"""
+  FULL_ACCESS
+}
+
+""""""
+input UserCollectionTrackingFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  type: CollectionType!
+
+  """"""
+  following: Boolean
+
+  """"""
+  finishedAt: Time
+
+  """Don't return trails or curated lists that been finished"""
+  excludeFinished: Boolean
+}
+
+""""""
+type Ebook {
+  """"""
+  id: ID!
+
+  """URL Friendly slug that can be used as a unique identifier"""
+  slug: String!
+
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  image: Image
+
+  """"""
+  readingTime: Int
+
+  """"""
+  entryLevel: EntryLevelValue!
+
+  """"""
+  isFree: Boolean!
+
+  """"""
+  isFeatured: Boolean!
+
+  """"""
+  contentSegments: [ContentSegment!]!
+
+  """Experts that are part of this ebook"""
+  experts: [Expert!]!
+
+  """Content categories related to this ebook"""
+  categories: [Category!]!
+
+  """Learning paths that include this content piece"""
+  learningPaths(filter: LearningPathFilter!, sorting: SortOrdering): LearningPathConnection!
+
+  """The actual chapters of the ebook"""
+  chapters: [Chapter!]!
+
+  """The users current progress within the book"""
+  userContentTracking: UserContentTracking
+
+  """"""
+  organisation: Organisation
+
+  """"""
+  organisationGroups: [OrganisationGroup!]!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  publishedAt: Time
+
+  """Retrieve content that is related to this content piece"""
+  relatedContent(limit: Int!): [ContentCard!]!
+
+  """Averge rating from 1-5 the content piece has received"""
+  rating: Float!
+
+  """The number of reviews the content piece as received"""
+  numberOfReviews: Int!
+
+  """The amount of time spent on by users"""
+  activityCount: Int! @deprecated(reason: "Use timeSpentOnByUsers insteads")
+
+  """The amount of time spent on by users"""
+  timeSpentOnByUsers: Int!
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]!
+
+  """The number of upvotes the content piece has received"""
+  upvoteCount: Int!
+
+  """The number of downvotes the content piece has received"""
+  downvoteCount: Int!
+
+  """Tells whether content is rated by user or not"""
+  contentRatingByUser: ContentVote!
+
+  """Comments on content"""
+  comments(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+
+  """"""
+  numberOfComments: Int!
+}
+
+""""""
+enum EntryLevelValue {
+  """"""
+  BEGINNER
+
+  """"""
+  INTERMEDIATE
+
+  """"""
+  ADVANCED
+}
+
+""""""
+type ContentUserNote {
+  """"""
+  id: ID!
+
+  """"""
+  user: User!
+
+  """"""
+  contentCard: ContentCard!
+
+  """"""
+  headline: String!
+
+  """"""
+  body: String!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+input CouponInput {
+  """"""
+  code: String!
+
+  """"""
+  remainingCharges: Int!
+
+  """"""
+  duration: String!
+
+  """"""
+  durationInMonths: Int
+
+  """"""
+  restrictedContent: String
+
+  """"""
+  percentOff: Int!
+
+  """"""
+  organisationId: String
+
+  """"""
+  restrictedSubscriptionLevel: String
+
+  """"""
+  restrictedSubscriptionDuration: Int
+
+  """"""
+  restrictedToFirstTimeUser: Boolean
+}
+
+""""""
+type AssignmentConnection {
+  """"""
+  edges: [Assignment!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+type AssignmentContentStatistics {
+  """The ID of the content piece"""
+  contentId: ID!
+
+  """The name of the content piece"""
+  contentName: String!
+
+  """The estimated length of the content piece"""
+  contentLength: Int!
+
+  """The number of users that have been assigned this content piece"""
+  usersAssigned: Int!
+
+  """The average completion rate for this content piece"""
+  avgCompletionRate: Float!
+
+  """Totalt amount of time the users have spent on this content piece"""
+  durationConsumed: Int!
+}
+
+""""""
+input CreateContentUserNote {
+  """"""
+  headline: String!
+
+  """"""
+  body: String!
+}
+
+""""""
+scalar Time
+
+""""""
+input CreateUserInput {
+  """"""
+  email: String!
+
+  """"""
+  password: String!
+
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  company: String
+
+  """"""
+  joiningReason: String
+
+  """facebookLink represents facebook profile url"""
+  facebookLink: String
+
+  """twitterHandle represents twitter handle name"""
+  twitterHandle: String
+
+  """twitterHandle represents instagram handle name"""
+  instagramHandle: String
+
+  """linkedinLink represents linkedin profile url"""
+  linkedinLink: String
+
+  """"""
+  websiteLink: String
+
+  """"""
+  biography: String
+}
+
+""""""
+type CuratedList {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  ebooks: [Ebook!]!
+
+  """"""
+  podcasts: [Podcast!]!
+
+  """"""
+  events: [Event!]!
+
+  """"""
+  streams: [Stream!]!
+
+  """"""
+  organisation: Organisation
+
+  """"""
+  organisationGroups: [OrganisationGroup!]!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+enum FeedActivityType {
+  """"""
+  COMMENT
+
+  """"""
+  REPLY_ON_COMMENT
+
+  """"""
+  FINISHED_CONTENT
+
+  """"""
+  RATED_CONTENT
+
+  """"""
+  FOLLOW_USER
+
+  """"""
+  NEWELY_PUBLISH_CONTENT
+}
+
+""""""
+input ExpertInput {
+  """The experts title"""
+  title: String!
+
+  """The company the expert works at"""
+  company: String
+
+  """The experts email address"""
+  email: String!
+
+  """First name"""
+  firstName: String!
+
+  """Last name"""
+  lastName: String!
+
+  """Biography"""
+  biography: String!
+
+  """Image ID"""
+  image: ID!
+
+  """Array of category ids"""
+  categories: [ID!]!
+
+  """If the expert is a mentor"""
+  isMentor: Boolean!
+
+  """What price to show for mentorship"""
+  mentorPriceText: String
+
+  """Where the mentor is available to mentor"""
+  mentorAvailableText: String
+
+  """"""
+  priority: Int!
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+
+  """Which regions the expert should be available in"""
+  regionRestrictions: [String!]
+}
+
+""""""
+input LifegoalInput {
+  """Name of the life goal"""
+  name: String!
+
+  """Emoji representation of the life goal"""
+  emoji: String!
+
+  """Categories associated to the life goal"""
+  categories: [ID!]
+
+  """Image ID"""
+  image: ID!
+
+  """Image ID to use for the icon"""
+  icon: ID
+
+  """If the life goal belongs to a specific organisation"""
+  organisationID: ID
+}
+
+""""""
+input OrganisationUserImport {
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  email: String!
+}
+
+""""""
+enum ContentVote {
+  """"""
+  UPVOTE
+
+  """"""
+  DOWNVOTE
+
+  """"""
+  UNDETERMINED
+}
+
+""""""
+input EbookFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  name: String
+
+  """"""
+  experts: [ID!]
+
+  """"""
+  categories: [ID!]
+
+  """"""
+  entryLevel: [EntryLevelValue!]
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+
+  """"""
+  onlyRated: Boolean
+
+  """
+  includeSensitiveContent filter the content basis of sensitivity of content
+  """
+  includeSensitiveContent: Boolean
+}
+
+""""""
+input PollQuestionInput {
+  """The question displayed to the user"""
+  question: String!
+
+  """Filter the question basis of time frame"""
+  activeFrom: Time!
+
+  """Filter the question basis of time frame"""
+  activeUntil: Time!
+
+  """Filter the question basis of question type"""
+  questionType: QuestionType!
+
+  """
+  An image ID should be provided if the QuestionType is BOOLEAN since it's a yes or no question
+  """
+  imageID: ID
+
+  """Define the purpose of the polls like daily polls onboarding as so on."""
+  purpose: ShowOnScreenType!
+
+  """The different alternatives to answer with"""
+  answerOptions: [PollQuestionAnswerOption!]!
+}
+
+""""""
+scalar Upload
+
+""""""
+type TaxRate {
+  """"""
+  id: ID!
+
+  """"""
+  active: Boolean!
+
+  """"""
+  inclusive: Boolean!
+
+  """"""
+  country: String!
+
+  """"""
+  percentage: Float!
+
+  """"""
+  description: String
+
+  """"""
+  displayName: String!
+
+  """"""
+  stripeTaxRateID: String!
+
+  """"""
+  taxType: String!
+
+  """"""
+  created: Int!
+
+  """"""
+  jurisdiction: String
+
+  """"""
+  livemode: Boolean
+
+  """"""
+  state: String
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+input SubscriptionFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+}
+
+""""""
+enum CommunicationTemplateJourneys {
+  """"""
+  ONBOARDING_LOGIN_NOW
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_1
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_2
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_3
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_4
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_5
+
+  """"""
+  ONBOARDING_LOGIN_REMINDER_6
+}
+
+""""""
+input FeaturedContentInput {
+  """"""
+  isFree: Boolean!
+
+  """"""
+  contentId: String
+
+  """"""
+  contentType: ContentType
+
+  """"""
+  header: String
+
+  """"""
+  paragraph: String
+
+  """"""
+  image: ID
+
+  """"""
+  screen: String
+
+  """"""
+  screenParams: Map
+
+  """"""
+  linkToURL: String
+
+  """"""
+  promotedFrom: Time!
+
+  """"""
+  promotedUntil: Time!
+
+  """"""
+  organisationId: ID
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type OrganisationStats {
+  """"""
+  headers: [String!]!
+
+  """"""
+  data: [[String!]]!
+}
+
+""""""
+enum CollectionType {
+  """"""
+  LEARNING_PATH
+
+  """"""
+  CURATED_LIST
+}
+
+""""""
+type Weeklygoal {
+  """"""
+  id: ID!
+
+  """"""
+  week: Int!
+
+  """"""
+  year: Int!
+
+  """"""
+  ebook: Ebook
+
+  """"""
+  podcast: Podcast
+
+  """"""
+  stream: Stream
+
+  """"""
+  lifegoal: Lifegoal!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+type CohortUserConnection {
+  """"""
+  meta: CursorInfo!
+
+  """"""
+  edges: [CohortUserEdge!]!
+}
+
+""""""
+type Expert {
+  """Identifier of the expert"""
+  id: ID!
+
+  """URL Friendly slug that can be used as a unique identifier"""
+  slug: String!
+
+  """The email of the expert"""
+  email: String!
+
+  """The title of the expert"""
+  title: String!
+
+  """Their first name"""
+  firstName: String!
+
+  """Their last name"""
+  lastName: String!
+
+  """Experts biography"""
+  biography: String!
+
+  """Profile/Avatar picture"""
+  image: Image
+
+  """If an expert is a mentor"""
+  isMentor: Boolean!
+
+  """How much the mentor would charge for a session"""
+  mentorPriceText: String
+
+  """
+  If the mentor is available for mentoring this contains some brief information to their capabilities
+  """
+  mentorAvailableText: String
+
+  """Deprecated"""
+  priority: Int!
+
+  """A list of categories in which the expert is deemed an expert"""
+  categories: [Category!]!
+
+  """If the current authenticated user is following this expert"""
+  isAuthenticatedUserFollowing: Boolean!
+
+  """An organisation which the expert is associated to"""
+  organisation: Organisation
+
+  """Which organisation group the expert is associated"""
+  organisationGroups: [OrganisationGroup!]!
+
+  """If the expert is live this is the live stream ID"""
+  currentLiveStreamId: ID
+
+  """
+  Which user is associated to the expert, can only be access by the user it's self or an admin
+  """
+  user: User
+
+  """The userID associated to the expert thats publicly available"""
+  userId: ID
+
+  """The name of the company that the expert worked for"""
+  company: String
+
+  """
+  Retrieve content related in which the expert has been part of the creation
+  """
+  content(filter: ContentCardsFilter!, sorting: ContentCardsSorting!): ContentConnection!
+
+  """When the expert was created"""
+  createdAt: Time!
+
+  """When the expert was updated"""
+  updatedAt: Time!
+
+  """Which regions the expert should be available in"""
+  regionRestrictions: [String!]
+
+  """Count of content expert has created"""
+  contentCreatedCount: Int!
+}
+
+""""""
+type FeedConnection {
+  """"""
+  edges: [FeedEdge!]!
+
+  """"""
+  meta: CursorInfo!
+}
+
+""""""
+input EpisodeInput {
+  """"""
+  name: String!
+
+  """"""
+  audio: String!
+
+  """"""
+  order: Int!
+}
+
+""""""
+input UpdateUserInput {
+  """
+  Which roles the user should have, this only applies if the updating user is an admin
+  """
+  roles: [String!]
+
+  """
+  The users password, if not specific it's not updated.
+  
+  This will be removed in the future
+  """
+  password: String
+
+  """The users first name"""
+  firstName: String!
+
+  """The users last name"""
+  lastName: String!
+
+  """
+  The users email
+  
+  This will be removed from this API Call in the future
+  """
+  email: String!
+
+  """The users company"""
+  company: String
+
+  """Avatar image ID"""
+  avatarImage: ID
+
+  """Cover image ID"""
+  coverImage: ID
+
+  """facebookLink represents facebook profile url"""
+  facebookLink: String
+
+  """twitterHandle represents twitter handle name"""
+  twitterHandle: String
+
+  """twitterHandle represents instagram handle name"""
+  instagramHandle: String
+
+  """linkedinLink represents linkedin profile url"""
+  linkedinLink: String
+
+  """Link to the users website"""
+  websiteLink: String
+
+  """Update the users biography"""
+  biography: String
+
+  """The users job title"""
+  jobTitle: String
+}
+
+""""""
+type TopCategoryConsumed {
+  """"""
+  category: Category
+
+  """"""
+  duration: Int
+}
+
+""""""
+type SubscriptionModel {
+  """"""
+  id: ID!
+
+  """"""
+  customerId: String
+
+  """"""
+  subscriptionId: String
+
+  """"""
+  billingPeriod: String
+
+  """"""
+  status: String!
+
+  """"""
+  paidAt: Time
+
+  """"""
+  currentPeriodEnd: Time
+
+  """"""
+  cancelAtPeriodEnd: Boolean!
+
+  """"""
+  trialUntil: Time
+
+  """"""
+  seats: Int!
+
+  """"""
+  subscriptionPlan: SubscriptionPlan!
+
+  """"""
+  taxRate: [TaxRate!]!
+
+  """"""
+  paymentPlatform: String!
+
+  """"""
+  coupon: Coupon
+
+  """"""
+  couponCode: String
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+input LearningPathCohortFilter {
+  """"""
+  limit: Int
+
+  """"""
+  inviteStatus: CohortInviteStatus
+}
+
+""""""
+input UpdateComment {
+  """"""
+  comment: String!
+
+  """"""
+  commentId: ID!
+
+  """"""
+  type: CommentType!
+}
+
+"""
+Backoffice org admins should be able to update a number of fields on a user
+"""
+input UpdateUserAsOrgAdmin {
+  """The users first name"""
+  firstName: String!
+
+  """The users last name"""
+  lastName: String!
+
+  """The users email"""
+  email: String!
+
+  """The users company"""
+  company: String!
+
+  """Avatar image ID"""
+  avatarImage: ID
+
+  """Cover image ID"""
+  coverImage: ID
+
+  """facebookLink represents facebook profile url"""
+  facebookLink: String!
+
+  """twitterHandle represents twitter handle name"""
+  twitterHandle: String!
+
+  """twitterHandle represents instagram handle name"""
+  instagramHandle: String!
+
+  """linkedinLink represents linkedin profile url"""
+  linkedinLink: String!
+
+  """Link to the users website"""
+  websiteLink: String!
+
+  """Update the users biography"""
+  biography: String!
+
+  """The users job title"""
+  jobTitle: String!
+
+  """
+  If the user should be considered an expert within their own organisation, if called will add the org filter
+  """
+  isExpert: Boolean!
+
+  """If the user should be able to perform organisation live streams"""
+  isAbleToLiveStream: Boolean!
+}
+
+""""""
+type CategoryConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Category!]!
+}
+
+""""""
+type CurrentlyFeaturedContent {
+  """"""
+  content: ContentCard
+
+  """"""
+  config: FeaturedContent
+}
+
+""""""
+type PollQuestionAnswerOptions {
+  """Unique answer identifier"""
+  id: ID!
+
+  """The poll question answer displayed to the user"""
+  answer: String!
+
+  """The image to be displayed when asking the question"""
+  image: Image
+
+  """
+  Vote count represents number of user selected this particular opiton for answer.
+  """
+  voteCount: Int!
+}
+
+""""""
+input CommunicationTemplateInput {
+  """"""
+  name: String!
+
+  """"""
+  description: String!
+
+  """"""
+  subject: String!
+
+  """"""
+  htmlPart: String!
+
+  """"""
+  textPart: String!
+
+  """"""
+  json: Map!
+
+  """"""
+  defaultSubstitutions: [DefaultSubstitutionAttributes]
+}
+
+""""""
+input EventInput {
+  """If the event is free to attend"""
+  isFree: Boolean!
+
+  """The name of the event"""
+  name: String!
+
+  """A short description on what the event is about"""
+  preamble: String!
+
+  """Which image ID to use"""
+  image: ID!
+
+  """Geo spatial data for physical events"""
+  location: LocationInput
+
+  """A customed named location name"""
+  locationDisplayName: String
+
+  """
+  Content segments are just another way of structuring more information about the content
+  """
+  contentSegments: [ContentSegmentInput!]!
+
+  """What kind of event this is"""
+  eventType: EventType!
+
+  """How much each entry ticket costs for users without a subscription"""
+  ticketPrice: Int!
+
+  """Which currency to charge the users in"""
+  ticketCurrency: String!
+
+  """The max number of attendees that can join this event"""
+  maxAttendees: Int!
+
+  """
+  If the wait list should be enabled, if it is then when users sign up they get put on a wait list
+  """
+  waitListEnabled: Boolean!
+
+  """
+  If the wait list is enabled ths following question will be asked to the users to reply when signing up to the event
+  """
+  questionnaire: String!
+
+  """If the event is a online event"""
+  isOnline: Boolean!
+
+  """If the event is online the conference url should be provided"""
+  conferenceUrl: String
+
+  """"""
+  requiredSubscriptionLevel: String!
+
+  """What time the event starts"""
+  startsAt: Time
+
+  """What time the event is finished"""
+  endsAt: Time
+
+  """When the event should be published"""
+  publishedAt: Time
+
+  """Experts that will be hosting the event"""
+  experts: [ID!]!
+
+  """Which categories/topics this event is associated with"""
+  categories: [ID!]!
+
+  """What level of content will be discussed in the event"""
+  entryLevel: EntryLevelValue!
+
+  """Which organisation this event is associated with"""
+  organisationID: ID
+
+  """Which organistion groups that can see the event"""
+  organisationGroups: [ID!]
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]
+
+  """
+  Tags represents hash tags which will be attached to content for better search and better content delivery
+  """
+  tags: [String!]
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+}
+
+""""""
+enum ContentSelection {
+  """"""
+  FOR_ME
+
+  """"""
+  ONGOING
+
+  """"""
+  BOOKMARKED
+
+  """"""
+  ATTENDED
+
+  """"""
+  UPCOMING
+
+  """"""
+  FINISHED
+
+  """"""
+  MY_EXPERTS
+
+  """"""
+  FAVORITES
+
+  """"""
+  TO_CONSUME
+
+  """"""
+  DAILY_GOALS
+
+  """"""
+  FREE
+
+  """"""
+  ORGANISATION_CONTENT
+}
+
+""""""
+input PostComment {
+  """"""
+  comment: String!
+
+  """"""
+  parentComment: ID
+
+  """"""
+  referenceId: ID!
+
+  """"""
+  type: CommentType!
+}
+
+""""""
+input EbookInput {
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  image: ID!
+
+  """"""
+  readingTime: Int!
+
+  """"""
+  experts: [ID!]
+
+  """"""
+  categories: [ID!]
+
+  """"""
+  contentSegments: [ContentSegmentInput!]!
+
+  """"""
+  entryLevel: EntryLevelValue!
+
+  """"""
+  chapters: [ChapterInput!]!
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+
+  """"""
+  publishedAt: Time
+
+  """"""
+  isFree: Boolean
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]
+
+  """
+  Tags represents hash tags which will be attached to content for better search and better content delivery
+  """
+  tags: [String!]
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+}
+
+""""""
+input ChapterInput {
+  """"""
+  name: String!
+
+  """"""
+  index: Int!
+
+  """"""
+  pages: [String!]!
+}
+
+""""""
+type PersonaQuestion {
+  """"""
+  id: ID!
+
+  """"""
+  question: String!
+
+  """"""
+  imageUri: String!
+}
+
+""""""
+type UserConsumedTrialContent {
+  """"""
+  id: ID!
+
+  """"""
+  userId: ID!
+
+  """"""
+  contentId: ID!
+
+  """"""
+  consumedAt: Time!
+}
+
+""""""
+type UserEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  user: User!
+}
+
+""""""
+input ResetPasswordFinalizeInput {
+  """"""
+  email: String!
+
+  """"""
+  nonce: String!
+
+  """"""
+  password: String!
+}
+
+""""""
+type AssignmentMemberStatistics {
+  """The ID of the user"""
+  userId: ID!
+
+  """Their username which is a concat of first name and last name"""
+  username: String!
+
+  """CSV of group that the user belongs to"""
+  groupNames: String!
+
+  """Total amount of time they have spent on their assignments"""
+  totalTimeConsumed: Int!
+
+  """The number of content pieces they have completed"""
+  assignmentsCompleted: Int!
+
+  """The number of content piece they have been assigned in total"""
+  assignmentsInTotal: Int!
+
+  """Average completion rate of the assigned content"""
+  avgCompletionRate: Float!
+}
+
+""""""
+input AssignmentInput {
+  """Internal title of assignment"""
+  assignmentTitle: String!
+
+  """Optional reason to display to the users"""
+  assignmentReason: String!
+
+  """List of learning path ids to be part of the assignment"""
+  learningPaths: [ID!]!
+
+  """List of users to assign the content to"""
+  users: [ID!]!
+}
+
+""""""
+type IsCouponValid {
+  """"""
+  valid: Boolean!
+
+  """"""
+  message: String
+}
+
+""""""
+type ExpertCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Expert!]!
+}
+
+""""""
+input LifegoalFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  organisationID: [ID!]
+}
+
+""""""
+type WeeklygoalCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Weeklygoal!]!
+}
+
+""""""
+input UserFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  email: String
+
+  """"""
+  name: String
+
+  """"""
+  createdAt: TimeRangeFilter
+}
+
+"""
+LikeableContent represents activities which can be liked by like mutation
+"""
+union LikeableContent = FeedActivity | Comment
+
+""""""
+union CommentableContent = FeedActivity | Ebook | Event | Podcast | Stream | LearningPath
+
+""""""
+type OrgStatsMostActiveUser {
+  """"""
+  userId: ID!
+
+  """"""
+  username: String!
+
+  """"""
+  averageCompletionRate: Float!
+
+  """"""
+  startedContentPieces: Int!
+
+  """"""
+  timeSpentInSeconds: Int!
+}
+
+""""""
+input PodcastFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  name: String
+
+  """"""
+  experts: [ID!]!
+
+  """"""
+  categories: [ID!]!
+
+  """"""
+  entryLevel: [EntryLevelValue!]
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+
+  """"""
+  onlyRated: Boolean
+
+  """
+  includeSensitiveContent filter the content basis of sensitivity of content
+  """
+  includeSensitiveContent: Boolean
+}
+
+""""""
+type Cohort {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  learningPath: LearningPath!
+
+  """"""
+  createdBy: User!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+
+  """"""
+  deleted: Boolean
+
+  """"""
+  inviteStatus: CohortInviteStatus!
+
+  """"""
+  status: CohortStatus! @deprecated(reason: "Use inviteStatus instead")
+
+  """"""
+  users(filter: CohortFilter, pagination: CursorPaginationInput): CohortUserConnection!
+
+  """"""
+  timeline: [Timeline!]!
+}
+
+""""""
+type CommunicationTemplateJourneyConnection {
+  """"""
+  edges: [CommunicationTemplateJourneyOutput!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+input PollQuestionAnswerOption {
+  """
+  Unique identifier of the poll question answer
+  
+  This should be NULL when creating new poll questions and must be provided when updating
+  """
+  id: ID
+
+  """The answer text that is displayed to the user"""
+  answer: String!
+
+  """
+  The image to display if the question type is MCQ (Multiple choice question) if the type is boolean it's not used.
+  """
+  imageID: ID
+}
+
+""""""
+type CohortEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  cohort: Cohort!
+}
+
+""""""
+input TimelineUserFilter {
+  """"""
+  limit: Int
+
+  """"""
+  query: String
+}
+
+""""""
+enum LikeType {
+  """"""
+  COMMENT
+
+  """"""
+  FEED
+}
+
+""""""
+type ConsumableContentCollection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [ConsumableContent!]!
+}
+
+""""""
+type Image {
+  """"""
+  id: ID!
+
+  """"""
+  uri: String!
+
+  """"""
+  width: Uint32!
+
+  """"""
+  height: Uint32!
+
+  """"""
+  sizeInBytes: Uint64!
+
+  """"""
+  blurHash: String!
+
+  """"""
+  contentType: String!
+
+  """"""
+  filename: String!
+
+  """"""
+  originalName: String!
+
+  """"""
+  organisationID: ID
+
+  """"""
+  createdAt: Time!
+}
+
+""""""
+type Episode {
+  """"""
+  name: String!
+
+  """"""
+  order: Int!
+
+  """"""
+  audio: AudioFile
+
+  """"""
+  audioId: String!
+}
+
+""""""
+input SortOrderingInput {
+  """"""
+  field: String!
+
+  """"""
+  direction: String!
+}
+
+""""""
+type Stream {
+  """"""
+  id: ID!
+
+  """URL Friendly slug that can be used as a unique identifier"""
+  slug: String!
+
+  """
+  The stream transitions through a number of states while being created as a live stream or
+  directly from the authoring tools
+  """
+  status: StreamStatus!
+
+  """Name of the stream as selected by expert or tigerhall"""
+  name: String!
+
+  """Short introduction"""
+  preamble: String!
+
+  """Image used when display a conten card for the stream"""
+  image: Image
+
+  """Length of the stream in seconds"""
+  length: Int!
+
+  """Level of the content"""
+  entryLevel: EntryLevelValue!
+
+  """If users without a subscription can view the stream"""
+  isFree: Boolean!
+
+  """These are short segments that we display beneth the content card"""
+  contentSegments: [ContentSegment!]!
+
+  """The URL to the video on S3"""
+  videoUrl: String!
+
+  """Agora channel identifier"""
+  channel: String!
+
+  """
+  A list of hosts in the stream, their order and if they have accepted the invite.
+  This should only be used during the part where the stream is live
+  """
+  hosts: [StreamHost!]!
+
+  """The experts associated with the publish content"""
+  experts: [Expert!]!
+
+  """Messages that were sent by users during the live stream"""
+  messages(limit: Int!): [StreamChatMessage!]!
+
+  """Categories associated to the content"""
+  categories: [Category!]!
+
+  """Learning paths associated to this stream"""
+  learningPaths(filter: LearningPathFilter!, sorting: SortOrdering): LearningPathConnection!
+
+  """The authenticated users current progress tracking"""
+  userContentTracking: UserContentTracking
+
+  """
+  Which organisation this event is available for. If no organisation then it's a public event
+  """
+  organisation: Organisation
+
+  """Which groups within an organisation this event is available for."""
+  organisationGroups: [OrganisationGroup!]!
+
+  """Retrieve content that is related to this content piece"""
+  relatedContent(limit: Int!): [ContentCard!]!
+
+  """The user that created the live stream"""
+  createdBy: Expert
+
+  """When the stream was created"""
+  createdAt: Time!
+
+  """When the stream was last updated"""
+  updatedAt: Time!
+
+  """When the stream was published"""
+  publishedAt: Time
+
+  """Averge rating from 1-5 the content piece has received"""
+  rating: Float!
+
+  """The number of reviews the content piece as received"""
+  numberOfReviews: Int!
+
+  """The amount of time spent on by users"""
+  activityCount: Int! @deprecated(reason: "Use timeSpentOnByUsers insteads")
+
+  """The amount of time spent on by users"""
+  timeSpentOnByUsers: Int!
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]!
+
+  """The number of upvotes the content piece has received"""
+  upvoteCount: Int!
+
+  """The number of downvotes the content piece has received"""
+  downvoteCount: Int!
+
+  """Tells whether content is rated by user or not"""
+  contentRatingByUser: ContentVote!
+
+  """Comments on content"""
+  comments(limit: Int, beforeCursor: String, afterCursor: String): CommentCursorConnection!
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+
+  """"""
+  numberOfComments: Int!
+}
+
+""""""
+type CommentCursorConnection {
+  """"""
+  edges: [CommentEdge!]!
+
+  """"""
+  meta: CursorInfo!
+}
+
+""""""
+type FeaturedContentConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [FeaturedContent!]!
+}
+
+""""""
+enum EventType {
+  """"""
+  ASK_ME_ANYTHING
+
+  """"""
+  SMALL_GROUP_SESSION
+
+  """"""
+  CONFERENCE
+
+  """"""
+  WEBINAR
+
+  """"""
+  VIRTUAL_EVENT
+
+  """"""
+  LIVESTREAM
+
+  """"""
+  MEET_IN_PERSON
+}
+
+""""""
+type CreateTeamsResult {
+  """"""
+  user: User!
+
+  """"""
+  auth: AuthenticationResponse!
+
+  """"""
+  organisation: Organisation!
+}
+
+"""Backoffice needs an API that updates both user and backoffice fields"""
+input UpdateExpertUserInput {
+  """The users job title"""
+  jobTitle: String
+
+  """
+  Which roles the user should have, this only applies if the updating user is an admin
+  """
+  roles: [String!]
+
+  """The users first name"""
+  firstName: String!
+
+  """The users last name"""
+  lastName: String!
+
+  """
+  The users email
+  
+  This will be removed from this API Call in the future
+  """
+  email: String!
+
+  """The users company"""
+  company: String
+
+  """Avatar image ID"""
+  avatarImage: ID
+
+  """Cover image ID"""
+  coverImage: ID
+
+  """facebookLink represents facebook profile url"""
+  facebookLink: String
+
+  """twitterHandle represents twitter handle name"""
+  twitterHandle: String
+
+  """twitterHandle represents instagram handle name"""
+  instagramHandle: String
+
+  """linkedinLink represents linkedin profile url"""
+  linkedinLink: String
+
+  """Link to the users website"""
+  websiteLink: String
+
+  """Update the users biography"""
+  biography: String
+
+  """
+  If specified only users that belong to this organisation can view this thinkfluencer
+  """
+  organisationID: ID
+
+  """
+  If specified only groups within the provided organisation can view this thinkfluencer
+  """
+  organisationGroups: [ID!]!
+
+  """If the thinkfluencer is restricted to certain regions"""
+  restrictedRegions: [String!]!
+
+  """If an expert is a mentor"""
+  isMentor: Boolean!
+
+  """How much the mentor would charge for a session"""
+  mentorPriceText: String!
+
+  """
+  If the mentor is available for mentoring this contains some brief information to their capabilities
+  """
+  mentorAvailableText: String!
+
+  """
+  How important the thinkfluencer is when it comes to listen thinkfluencers
+  """
+  priority: Int!
+
+  """Which categories this user is considered to be an expert in"""
+  categories: [ID!]!
+}
+
+""""""
+type ContentRatingConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [ContentRating!]!
+}
+
+""""""
+type PersonaConnection {
+  """"""
+  edges: [PersonaQuestionAnswer!]!
+
+  """"""
+  meta: PageInfo!
+}
+
+""""""
+input PollQuestionFilter {
+  """Filter the question basis of time frame"""
+  activeFrom: Time
+
+  """Filter the question basis of time frame"""
+  activeUntil: Time
+
+  """Filter the question basis of question type"""
+  questionType: QuestionType
+
+  """Filter the question basis of screenType"""
+  showOnScreen: ShowOnScreenType
+
+  """
+  Filter the question basis of polling purpose either it can be daily polls or for onboarding purpose
+  """
+  purpose: ShowOnScreenType
+
+  """Filter already answered question bases on authenticated user"""
+  excludeAlreadyAnswered: Boolean
+
+  """"""
+  exludeAlreadyAnswered: Boolean
+
+  """Query the question"""
+  query: String
+
+  """The number of items to return"""
+  limit: Int!
+
+  """Offset in the pagination"""
+  offset: Int!
+
+  """"""
+  inAppDisplay: Boolean
+}
+
+""""""
+input CohortFilter {
+  """
+  Deprecated: Use the inviteStatus filter instead to find the ongoing cohorts
+  """
+  status: [CohortStatus!]
+
+  """"""
+  inviteStatus: [CohortInviteStatus!]
+
+  """"""
+  limit: Int
+
+  """"""
+  search: String
+}
+
+""""""
+type Lifegoal {
+  """"""
+  id: ID!
+
+  """Name of the life goal"""
+  name: String!
+
+  """An emoji representation of the life goal"""
+  emoji: String
+
+  """Associated categories"""
+  categories: [Category!]!
+
+  """Image of the life goal, currently only used in the trail listing page"""
+  image: Image @deprecated(reason: "No longer used after the 1.13.9 release")
+
+  """Small icon used in the old explore page"""
+  icon: Image @deprecated(reason: "No longer used after the 1.13.9 release")
+
+  """If the life goal belongs to a specific organisation"""
+  organisation: Organisation
+
+  """
+  Experts that have content published content within this life goal or categories
+  """
+  experts: ExpertCollection!
+
+  """Retrieve the learning paths associated with this life goal"""
+  learningPaths(filter: LearningPathFilter!, sorting: SortOrdering!): LearningPathConnection!
+
+  """When it was created"""
+  createdAt: Time!
+
+  """When it was last updated"""
+  updatedAt: Time!
+
+  """The number of content pieces"""
+  contentCount: Int
+
+  """isFollowing attribute verify life goal is followed by user or not"""
+  isFollowing: Boolean!
+}
+
+""""""
+input StreamFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  name: String
+
+  """"""
+  status: [StreamStatus]
+
+  """"""
+  experts: [ID!]
+
+  """"""
+  categories: [ID!]
+
+  """"""
+  entryLevel: [EntryLevelValue!]
+
+  """"""
+  uniqueExpertStream: Boolean
+
+  """"""
+  createdBefore: Time
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+
+  """"""
+  onlyRated: Boolean
+
+  """
+  includeSensitiveContent filter the content basis of sensitivity of content
+  """
+  includeSensitiveContent: Boolean
+}
+
+""""""
+input SetInitialTeamsSubscription {
+  """"""
+  stripeSubscriptionPlanId: String!
+
+  """"""
+  stripeToken: String!
+
+  """"""
+  quantity: Int!
+}
+
+""""""
+input OnboardingQuestionsFilter {
+  """Filter on questions shown for a specific purpose"""
+  purpose: ShowOnScreenType
+}
+
+""""""
+type CommentEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  comment: Comment!
+}
+
+""""""
+input OrganisationMemberFilter {
+  """Filter the users by name"""
+  name: String
+
+  """Filter the users by the provided email"""
+  email: String
+
+  """Retrieve users by a specific group id"""
+  groupId: ID
+
+  """
+  If specified it will filter the users to either admin/not-admin or both
+  """
+  isAdmin: Boolean
+
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+}
+
+""""""
+enum Persona {
+  """"""
+  CORPORATE_CHARLIE
+
+  """"""
+  CURIOUS_CHRISTINA
+
+  """"""
+  IMPROVER_IAN
+
+  """"""
+  CARRER_CALVIN
+
+  """"""
+  NETWORK_NATALIE
+
+  """"""
+  CEO_TO_BE_CARL
+}
+
+""""""
+input SubscriptionPlanFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  currency: String
+
+  """"""
+  countryCode: String
+
+  """"""
+  digitalAccess: Boolean
+
+  """"""
+  show: Boolean
+
+  """"""
+  subscriptionLevel: String
+
+  """"""
+  basedOnGeoTagging: Boolean
+}
+
+""""""
+type CohortConnection {
+  """"""
+  meta: CursorInfo!
+
+  """"""
+  edges: [CohortEdge!]!
+}
+
+""""""
+type ContentConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [ContentCard!]!
+}
+
+""""""
+input SuggestedUsersToFollowFilter {
+  """"""
+  isExpert: Boolean
+
+  """"""
+  isAMemberOfSameOrganisation: Boolean
+
+  """"""
+  query: String
+
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+type CohortUserEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  cohortUser: CohortUser!
+}
+
+""""""
+enum CohortInviteStatus {
+  """"""
+  ACCEPTED
+
+  """"""
+  REJECTED
+
+  """"""
+  PENDING
+}
+
+"""Shows the timeline of a specific cohort"""
+type Timeline {
+  """Unique identifier for the timeline"""
+  id: ID!
+
+  """Content"""
+  content: ContentCard!
+
+  """Count of users currently on the content"""
+  activeUserCount: Int!
+
+  """Users which will be displayed over the content"""
+  featuredUsers: [User!]!
+
+  """List of all the users on the content"""
+  users(filter: TimelineUserFilter, pagination: CursorPaginationInput): UserCursorCollection!
+
+  """The chat associated to this timeline"""
+  chat: Chat!
+}
+
+"""Content that can be searched for"""
+union SearchableContent = Ebook | Event | Podcast | Stream | Expert | LearningPath
+
+""""""
+enum QuestionType {
+  """Multiple choice question"""
+  MCQ
+
+  """"""
+  BOOLEAN
+}
+
+""""""
+input UpdateContentUserNote {
+  """"""
+  headline: String!
+
+  """"""
+  body: String!
+}
+
+""""""
+input CuratedListInput {
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  podcasts: [ID!]
+
+  """"""
+  events: [ID!]
+
+  """"""
+  ebooks: [ID!]
+
+  """"""
+  streams: [ID!]
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+input ExpertFilter {
+  """The number of experts to return"""
+  limit: Int
+
+  """Offset of the results return"""
+  offset: Int
+
+  """Search for experts by name"""
+  name: String
+
+  """Search for experts by email"""
+  email: String
+
+  """Job title"""
+  jobTitle: String
+
+  """Only return experts that offer mentorship session"""
+  isMentor: Boolean
+
+  """That the expert profile has been associted to a user account"""
+  isAssociatedToUser: Boolean
+
+  """Ensures that the experts have the permission to livestream"""
+  isAbleToLivestream: Boolean
+
+  """Filter by categories associated to the experts"""
+  categories: [ID!]
+
+  """Filter by life goals associated the categories"""
+  lifeGoals: [String!]
+
+  """
+  Only retrieve the experts that the authenticted user performing this request follows
+  """
+  followedByAuthenticatedUser: Boolean
+
+  """Experts that belong to any of the organisations"""
+  organisationID: [ID!]
+
+  """Experts that belong to a specific organisaiton group"""
+  organisationGroups: [ID!]
+}
+
+""""""
+input LearningPathFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  keywords: String
+
+  """"""
+  categories: [ID!]
+
+  """"""
+  lifegoal: String
+
+  """"""
+  isFree: Boolean
+
+  """"""
+  organisationID: [ID!]
+
+  """"""
+  organisationGroups: [ID!]
+}
+
+""""""
+type OrganisationGroup {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  members: [User!]!
+
+  """"""
+  organisation: Organisation!
+
+  """"""
+  createdAt: Time!
+
+  """"""
+  updatedAt: Time!
+}
+
+""""""
+input TimeRangeFilter {
+  """"""
+  from: Time!
+
+  """"""
+  to: Time!
+}
+
+""""""
+type CursorInfo {
+  """"""
+  nextCursor: String!
+
+  """"""
+  hasNext: Boolean
+
+  """"""
+  prevCursor: String!
+
+  """"""
+  hasPrev: Boolean
+}
+
+""""""
+type StreamChatMessage {
+  """"""
+  id: ID!
+
+  """"""
+  streamId: ID!
+
+  """"""
+  content: String!
+
+  """"""
+  timestamp: Int!
+
+  """"""
+  user: User!
+}
+
+""""""
+input AssignmentsFilter {
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+input CreateCohortInput {
+  """"""
+  name: String!
+
+  """"""
+  learningPathId: ID!
+
+  """"""
+  users: [ID!]
+}
+
+""""""
+type ContentSegment {
+  """"""
+  header: String!
+
+  """"""
+  paragraph: String!
+}
+
+""""""
+input ContentUserNoteFilter {
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+}
+
+""""""
+input PodcastInput {
+  """"""
+  name: String!
+
+  """"""
+  preamble: String!
+
+  """"""
+  image: ID!
+
+  """"""
+  contentSegments: [ContentSegmentInput!]!
+
+  """"""
+  length: Int!
+
+  """"""
+  experts: [ID!]!
+
+  """"""
+  categories: [ID!]!
+
+  """"""
+  entryLevel: EntryLevelValue!
+
+  """"""
+  episodes: [EpisodeInput]!
+
+  """"""
+  publishedAt: Time
+
+  """"""
+  organisationID: ID
+
+  """"""
+  organisationGroups: [ID!]
+
+  """"""
+  isFree: Boolean
+
+  """Which regions the content piece can be viewed in"""
+  regionRestrictions: [String!]
+
+  """
+  Tags represents hash tags which will be attached to content for better search and better content delivery
+  """
+  tags: [String!]
+
+  """
+  isSensitive represents extra filter on fetching events to make person privacy intact
+  """
+  isSensitive: Boolean!
+}
+
+""""""
+enum CommentRating {
+  """"""
+  LIKE
+
+  """"""
+  UNDETERMINED
+}
+
+""""""
+input ApplyToEventWaitListInput {
+  """"""
+  eventId: String!
+
+  """"""
+  questionnaireResponse: String
+}
+
+""""""
+input FeaturedContentFilter {
+  """"""
+  limit: Int
+
+  """"""
+  offset: Int
+
+  """"""
+  onlyVisible: Boolean
+}
+
+""""""
+input FeedFilter {
+  """The number of items to return"""
+  limit: Int!
+
+  """Retrieve activities that happened before this timestamp"""
+  beforeCursor: String
+
+  """Retrieve actiites that happened after this timestamp"""
+  afterCursor: String
+
+  """Only return specific types of activity feed"""
+  types: [FeedActivityType!]!
+}
+
+""""""
+type Organisation {
+  """Unique identifier"""
+  id: ID!
+
+  """The brand name of the company"""
+  name: String!
+
+  """What type of organisation this is"""
+  type: OrganisationCustomerType!
+
+  """
+  The invitation token is used to generate a link where members of a company can sign up at will
+  """
+  invitationToken: ID!
+
+  """The groups associated within the organisation"""
+  groups: [OrganisationGroup!]!
+
+  """The users are that marked as org admins are available here"""
+  admins: [User!]!
+
+  """Retrieve the members of the organisation"""
+  members(filter: OrganisationMemberFilter, sorting: SortOrdering): UserCollection!
+
+  """The number of users on a free access plan"""
+  freeAccessAccounts: Int! @deprecated(reason: "we are moving away from multiple subscription plans")
+
+  """The number of users on full access plan"""
+  fullAccessAccounts: Int! @deprecated(reason: "we are moving away from multiple subscription plans")
+
+  """The number of users that are on a digital access plan"""
+  digitalAccessAccounts: Int! @deprecated(reason: "we are moving away from multiple subscription plans")
+
+  """The number of users that are on a community access plan"""
+  communityAccessAccounts: Int! @deprecated(reason: "we are moving away from multiple subscription plans")
+
+  """
+  The most popular experts based on the consumption of their content cards
+  """
+  statisticsMostPopularExperts(filter: OrgStatisticsFilter!): [PieDataPoint!]!
+
+  """The most popular categories based on the consumption of content cards"""
+  statisticsMostPopularCategories(filter: OrgStatisticsFilter!): [PieDataPoint!]!
+
+  """The number of users active in the provided frequency"""
+  statisticsUserActivity(filter: OrgStatisticsFilter!): [GraphDataPoint!]!
+
+  """The average time spent on content group by provided frequency"""
+  statisticsAverageTimeSpent(filter: OrgStatisticsFilter!): [GraphDataPoint!]!
+
+  """The average number of new content pieces started"""
+  statisticsAverageContentPiecesStart(filter: OrgStatisticsFilter!): [GraphDataPoint!]!
+
+  """Leader bord for the most active users"""
+  statisticsMostActiveUsers(filter: OrgStatisticsFilter!): [OrgStatsMostActiveUser!]!
+
+  """Leader board for the most popular content"""
+  statisticsMostPopularContent(filter: OrgStatisticsFilter!): [OrgStatsMostPopularContent!]!
+
+  """The percentage of users that have accessed the application"""
+  memberAdoptionRate: Float!
+
+  """The number of users that have access the application"""
+  membersLoggedIn: Int!
+
+  """
+  Call this to get a sso url for accessing the stripe customer portal for this account.
+  
+  Note: Do not include this in every single request please.
+  """
+  stripeCustomerPortal(returnURL: String!): String!
+
+  """The subscription associated to the organisation"""
+  subscription: SubscriptionModel
+
+  """List of assignments created by this organisation"""
+  assignments(filter: AssignmentsFilter!): AssignmentConnection!
+
+  """Get the statistics for each member in terms of completion rate"""
+  assignmentMemberStatistics: [AssignmentMemberStatistics!]!
+
+  """Get the statistics for an organisation grouped by content"""
+  assignmentContentStatistics: [AssignmentContentStatistics!]!
+
+  """Get the statistics for an organisation grouped by organisation groups"""
+  assignmentGroupStatistics: [AssignmentGroupStatistics!]!
+
+  """The user that created the organisation"""
+  createdBy: User
+
+  """
+  A map of which of the onboarding templates the organisation has overwritten
+  """
+  onboardingJourneyOverride: Map!
+
+  """When the organisation was created"""
+  createdAt: Time!
+
+  """When the organisation was last updated"""
+  updatedAt: Time!
+
+  """activeUsers show non blocked users of organisation"""
+  activeUsers: Int!
+}
+
+""""""
+type PersonaQuestionAnswer {
+  """"""
+  id: ID!
+
+  """"""
+  question: PersonaQuestion!
+
+  """"""
+  result: Boolean!
+
+  """"""
+  createdAt: Time!
+}
+
+""""""
+type PollQuestionResponse {
+  """The unique identifier of the poll question"""
+  id: ID!
+
+  """Which type of question this is"""
+  questionType: QuestionType!
+
+  """The question displayed to the user"""
+  question: String!
+
+  """If the current question is active or not"""
+  active: Boolean!
+
+  """The image to be displayed when asking the question"""
+  image: Image
+
+  """
+  The name of the clevertap user property in which we want to persist this answer
+  """
+  clevertapKey: String!
+
+  """Define the purpose of the polls like daily polls onboarding as so on."""
+  purpose: ShowOnScreenType!
+
+  """A list of alternatives for the user to answer the poll with"""
+  answerOptions: [PollQuestionAnswerOptions!]!
+
+  """The selected answer that the authenticated user voted for"""
+  selectedAnswer: PollQuestionAnswerOptions
+
+  """End time of the poll question"""
+  activeUntil: Time!
+
+  """Start time of the poll question"""
+  activeFrom: Time!
+}
+
+""""""
+type PodcastConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Podcast!]!
+}
+
+""""""
+type NoContent {
+  """"""
+  success: Boolean!
+}
+
+""""""
+type Category {
+  """"""
+  id: ID!
+
+  """Name of the category"""
+  name: String!
+
+  """Image representing the category"""
+  image: Image
+
+  """Experts that specialise in this category"""
+  experts(filter: ExpertFilter, sorting: SortOrdering): ExpertCollection!
+
+  """Connent associated to this categorys"""
+  contents(filter: ContentCardsFilter!): ContentConnection!
+
+  """Which organisation this category belongs to"""
+  organisation: Organisation
+
+  """Which organisation group this category belongs to"""
+  organisationGroups: [OrganisationGroup!]!
+}
+
+""""""
+type Chat {
+  """
+  This ID actually refers to the object the chat refers to (Might change this in the future)
+  """
+  id: ID!
+
+  """The last message the chat has been sent"""
+  lastMessage: ChatMessage
+
+  """If the user has unread messages"""
+  hasUnreadMessages: Boolean!
+
+  """
+  When the user last checked the chat, this is triggered when the frontend subscribes to new chat messages
+  """
+  lastViewed: Time
+
+  """Retrieve all of the messages for this chat"""
+  messages(pagination: CursorPaginationInput): ChatMessageConnection!
+}
+
+""""""
+input CohortInviteUserListFilter {
+  """"""
+  searchByName: String
+}
+
+""""""
+type UserCollectionTracking {
+  """"""
+  id: ID!
+
+  """"""
+  learningPathId: ID
+
+  """"""
+  curatedListId: ID
+
+  """"""
+  following: Boolean
+
+  """"""
+  finishedAt: Time
+
+  """"""
+  updatedAt: Time
+
+  """"""
+  createdAt: Time!
+}
+
+""""""
+input WeeklygoalInput {
+  """"""
+  lifegoal: String!
+
+  """"""
+  week: Int!
+
+  """"""
+  year: Int!
+
+  """"""
+  ebook: String
+
+  """"""
+  podcast: String
+
+  """"""
+  stream: String
+}
+
+""""""
+input UserInAppSubscriptionInput {
+  """"""
+  planId: ID!
+
+  """"""
+  transactionReceipt: String!
+}
+
+""""""
+type Assignment {
+  """Unique ID of the assignment"""
+  id: ID!
+
+  """The title of the assignment which is displayed internally"""
+  assignmentTitle: String!
+
+  """
+  The reason for assignment which is (Optional but not null) which would be displayed to the users
+  """
+  assignmentReason: String!
+
+  """All the learning paths associated with this assigned content"""
+  learningPaths: LearningPathConnection!
+
+  """In the future we will also be able to assign specific content pices"""
+  contentCards: ContentConnection
+
+  """All the users that have received the assignment"""
+  users: UserCollection
+
+  """Who created the assignment"""
+  createdBy: User!
+
+  """When the assignment was created"""
+  createdAt: Time!
+
+  """The last time the assignment was updated"""
+  updatedAt: Time!
+}
+
+""""""
+type ChatEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  message: ChatMessage!
+}
+
+""""""
+enum TemplateType {
+  """"""
+  EMAIL
+
+  """"""
+  SMS
+
+  """"""
+  VOICE
+
+  """"""
+  PUSH
+
+  """"""
+  INAPP
+}
+
+""""""
+input EventFilter {
+  """Pagination limit, defaults to 20"""
+  limit: Int
+
+  """Pagination offset, defaults to 0"""
+  offset: Int
+
+  """Filter by the event name"""
+  name: String
+
+  """Filter BY specific experts"""
+  experts: [String!]
+
+  """Filter by specific categories"""
+  categories: [String!]
+
+  """Filter by specific content levels"""
+  entryLevel: [EntryLevelValue!]
+
+  """Filter by events that require a specific subscription level"""
+  subscriptionLevel: String
+
+  """Use this to filter events that start after the specified time"""
+  startsAt: Time
+
+  """Use this to filter events that end after the specified time"""
+  endsAt: Time
+
+  """Only show events that are in the future"""
+  onlyFutureEvents: Boolean
+
+  """Filter by specific organisations"""
+  organisationID: [ID!]
+
+  """Filter by specific organisation groups"""
+  organisationGroups: [ID!]
+
+  """
+  includeSensitiveContent filter the content basis of sensitivity of content
+  """
+  includeSensitiveContent: Boolean
+}
+
+""""""
+type StreamHost {
+  """Agora UID during live stream"""
+  uid: Uint32!
+
+  """Order in which to sort the hosts"""
+  order: Int!
+
+  """The users ID"""
+  userId: ID!
+
+  """The expert profile"""
+  expert: Expert!
+
+  """If they have accepted the invite, if null then they have not replied"""
+  accepted: Boolean
+
+  """signifies if user is featured host or not"""
+  isFeatured: Boolean!
+}
+
+""""""
+type UserCursorCollection {
+  """"""
+  meta: CursorInfo!
+
+  """"""
+  edges: [UserEdge!]!
+}
+
+""""""
+input ContentSegmentInput {
+  """"""
+  header: String!
+
+  """"""
+  paragraph: String!
+}
+
+""""""
+input IntRangeFilter {
+  """"""
+  from: Int
+
+  """"""
+  until: Int
+}
+
+""""""
+type EbookConnection {
+  """"""
+  meta: PageInfo!
+
+  """"""
+  edges: [Ebook!]!
+}
+
+""""""
+input StreamChatMessageInput {
+  """"""
+  streamId: ID!
+
+  """"""
+  content: String!
+
+  """"""
+  timestamp: Int!
+}
+
+""""""
+type UserStats {
+  """"""
+  ebooksRead: Int!
+
+  """"""
+  podcastsCompleted: Int!
+
+  """"""
+  eventsBooked: Int!
+
+  """"""
+  eventsAttended: Int!
+}
+
+""""""
+type AssignmentGroupStatistics {
+  """The ID of the content piece"""
+  groupID: ID!
+
+  """The name of the content piece"""
+  groupName: String!
+
+  """The number of users that have been assigned this content piece"""
+  peopleInTotal: Int!
+
+  """The average completion rate for this content piece"""
+  avgCompletionRate: Float!
+
+  """Totalt amount of time the users have spent on this content piece"""
+  durationConsumed: Int!
+}
+
+""""""
+input UserCollectionTrackingInput {
+  """"""
+  learningPathId: ID
+
+  """"""
+  curatedListId: ID
+
+  """"""
+  following: Boolean
+
+  """"""
+  finishedAt: Time
+
+  """"""
+  collectionType: CollectionType!
+}
+
+""""""
+type CommunicationTemplateJourneyOutput {
+  """"""
+  template: CommunicationTemplate
+
+  """"""
+  step: String
+}
+
+""""""
+type PageInfo {
+  """"""
+  total: Int!
+
+  """"""
+  limit: Int!
+
+  """"""
+  offset: Int!
+
+  """"""
+  recommendationId: String
+}
+
+""""""
+type User {
+  """"""
+  id: ID!
+
+  """"""
+  facebookId: String
+
+  """"""
+  firstName: String!
+
+  """"""
+  lastName: String!
+
+  """"""
+  company: String!
+
+  """"""
+  jobTitle: String!
+
+  """"""
+  seniority: String!
+
+  """"""
+  joiningReason: String!
+
+  """"""
+  persona: Persona
+
+  """"""
+  personaQuestionAnswers: PersonaConnection!
+
+  """"""
+  email: String!
+
+  """"""
+  mobileNumber: String!
+
+  """"""
+  roles: [String!]!
+
+  """"""
+  blocked: Boolean!
+
+  """"""
+  newsletter: Boolean!
+
+  """All of the events that the user has signed up to"""
+  events(filter: EventFilter, sorting: SortOrdering): EventConnection!
+
+  """"""
+  lifegoals: [Lifegoal!]!
+
+  """"""
+  subscription: SubscriptionModel
+
+  """"""
+  accessLevel: SubscriptionLevel!
+
+  """"""
+  stripeCustomers: Map!
+
+  """"""
+  creditCard: [UserCreditCard!]
+
+  """"""
+  stats: UserStats!
+
+  """"""
+  devices: [String!]!
+
+  """"""
+  couponCode: String!
+
+  """"""
+  couponRemainingCharges: Int!
+
+  """"""
+  couponVisible: Boolean!
+
+  """"""
+  consumedTrialContent: [UserConsumedTrialContent!] @deprecated(reason: "This is deprecated and will be removed in the next major release")
+
+  """Content the user has started but is yet to finish"""
+  ongoingContent(filter: ConsumableContentFilter!): ConsumableContentCollection!
+
+  """Content the user has finished"""
+  finishedContent(filter: ConsumableContentFilter!): ConsumableContentCollection!
+
+  """
+  We have this field because backoffice needs a way to associate thinkfluencer to organisers
+  
+  PLEASE DO NOT USE THIS FIELD IN MOBILE ITS FOR BACKOFFICE ONLY!
+  """
+  expertOrg: Organisation @deprecated(reason: "Dont use thie field its for backoffice only")
+
+  """Which groups within the org this user is visible to"""
+  expertOrgGroups: [OrganisationGroup!]! @deprecated(reason: "dont use for the same reason a thinfkluencerOrg")
+
+  """Categories in which this user is considered an expert"""
+  expertInTheseCategories: [Category!]!
+
+  """
+  Organisations the user is associated to, will be deprecated in the future allowing only a single organisatio
+  """
+  organisations(isAdmin: Boolean): [Organisation!]!
+
+  """Organisation groups the user is associated to"""
+  organisationGroups: [OrganisationGroup!]
+
+  """Retrieve the notes created by a user"""
+  contentCardsWithNotes(filter: ContentUserNoteFilter!): ContentConnection!
+
+  """Get the recommended content for the user based on the Merlin project"""
+  contentRecommendations: ContentConnection!
+
+  """Categories of which the user has recently consumed content from"""
+  recentlyConsumedCategories: [Category!]!
+
+  """A list of expert recommendations for a user"""
+  expertRecommendations: ExpertCollection!
+
+  """The amount of time a user has spent consuming content in seconds"""
+  statsContentConsumedTotal: Int!
+
+  """Exposes if the user is associated to an expert profile"""
+  expert: Expert
+
+  """Assignments associated to the user"""
+  assignments(filter: AssignmentsFilter!): AssignmentConnection!
+
+  """Statistics over how well the user their assignments"""
+  assignmentStatistics: UserAssignmentStatistics!
+
+  """
+  General statistics over all the content pieces the user has been assigned
+  """
+  assignmentContentStatistics: [UserAssignmentContentStatistics!]!
+
+  """The last time a API call was made from this users device"""
+  lastOnlineAt: Time
+
+  """When the user was created"""
+  createdAt: Time!
+
+  """When the user was last updated"""
+  updatedAt: Time!
+
+  """When the user was deleted"""
+  deletedAt: Time
+
+  """If the user is an expert"""
+  isExpert: Boolean!
+
+  """isFollowing flag to check user follow the respective person or not"""
+  isFollowing: Boolean!
+
+  """If an expert is a mentor"""
+  isMentor: Boolean!
+
+  """How much the mentor would charge for a session"""
+  mentorPriceText: String
+
+  """
+  If the mentor is available for mentoring this contains some brief information to their capabilities
+  """
+  mentorAvailableText: String
+
+  """facebookLink represents facebook profile url"""
+  facebookLink: String
+
+  """twitterHandle represents twitter handle name"""
+  twitterHandle: String
+
+  """twitterHandle represents instagram handle name"""
+  instagramHandle: String
+
+  """linkedinLink represents linkedin profile url"""
+  linkedinLink: String
+
+  """Users personal website"""
+  websiteLink: String
+
+  """Users biography"""
+  biography: String
+
+  """No. of users following current user"""
+  followerCount: Int!
+
+  """No. of users followed by current user"""
+  followingCount: Int!
+
+  """Count of content user has completed"""
+  contentCompletedCount: Int!
+
+  """Count of content user has created"""
+  contentCreatedCount: Int!
+
+  """Prioritize the experts in search results"""
+  priority: Int!
+
+  """Custom avatar image"""
+  avatarImage: Image
+
+  """Custom cover image if the user has uploaded an image"""
+  coverImage: Image
+
+  """user follower list"""
+  followers(filter: FollowersFollowingFilter, sorting: SortOrdering): UserCollection!
+
+  """user following list"""
+  followings(filter: FollowersFollowingFilter, sorting: SortOrdering): UserCollection!
+
+  """user top listened experts"""
+  userTopListenedExperts: [User!]!
+
+  """user top categories consumed"""
+  userTopCategories: [TopCategoryConsumed!]!
+
+  """The users social feed"""
+  feed(filter: FeedFilter!): FeedConnection!
+
+  """Trail cohorts that the user belong to"""
+  cohorts(filter: CohortFilter!, pagination: CursorPaginationInput): CohortConnection!
+
+  """Retrieve the onboarding questions the user has replied to"""
+  repliedPollQuestions(filter: OnboardingQuestionsFilter!, pagination: OffsetPagination!): PollQuestionConnection
+
+  """The number of pending cohort invitations"""
+  pendingCohortInvitations: Int!
+}

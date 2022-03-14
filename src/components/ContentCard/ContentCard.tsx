@@ -1,19 +1,11 @@
 import * as React from "react";
 import { Box, Image, ImageProps } from "@chakra-ui/react";
 
+import type { Podcast } from "../../lib/graphql/generated/Podcast";
 import { resize, fallbackImage } from "../../lib/resizer";
-import { ContentCardInfo, Expert, Category } from "./Info";
+import { ContentCardInfo } from "./Info";
 
-interface Image {
-  uri: string;
-}
-
-export interface ContentCardData {
-  name: string;
-  image: Image;
-  categories: Category[];
-  experts: Expert[];
-}
+interface ContentCardData extends Omit<Podcast, "__typename"> {}
 
 interface ContentCardCustomProps {
   imageLoading?: ImageProps["loading"];

@@ -9,10 +9,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+import type { Podcast } from "../lib/graphql/generated/Podcast";
 import { ALL_PODCAST_CARDS } from "../lib/graphql/AllPodcastCards";
 import { pushHistoryState } from "../lib/index";
 import { SearchForm } from "../components/SearchForm";
-import { ContentCard, ContentCardData } from "../components/ContentCard";
+import { ContentCard } from "../components/ContentCard";
 import { ContentCardSkeleton } from "../components/ContentCard/Skeleton";
 import { Toast } from "../components/Toast";
 
@@ -24,7 +25,7 @@ interface ContentCardsVars {
 
 interface ContentCardsResponse {
   contentCards: {
-    edges: ContentCardData[];
+    edges: Podcast[];
   };
 }
 

@@ -1,7 +1,9 @@
 {
   "name": "tigerhall-content",
   "private": true,
-  "keywords": ["tigerhall"],
+  "keywords": [
+    "tigerhall"
+  ],
   "homepage": "https://github.com/cajotafer/tigerhall-content",
   "repository": {
     "type": "git",
@@ -21,6 +23,8 @@
     "e2e": "start-server-and-test dev http://localhost:3000 cypress",
     "e2e:headless": "start-server-and-test dev http://localhost:3000 cypress:headless",
     "gen:theme-typings": "chakra-cli tokens ./src/theme/index.ts",
+    "schemagenerate": "apollo client:download-schema --endpoint https://api.staging.tigerhall.io/graphql ./src/lib/graphql/generated/schema.graphqls",
+    "codegen": "apollo client:codegen --target typescript --localSchemaFile ./src/lib/graphql/generated/schema.graphqls --outputFlat --includes \"src/lib/graphql/**/*.ts\" --excludes \"src/lib/graphql/generated/**\" --addTypename --globalTypesFile \"src/lib/graphql/generated/graphql-global-types.ts\" ./src/lib/graphql/generated",
     "postinstall": "npm run gen:theme-typings"
   },
   "dependencies": {
@@ -31,7 +35,7 @@
     "@emotion/react": "11.1.5",
     "@emotion/styled": "11.1.5",
     "framer-motion": "^4.0.3",
-    "graphql": "^16.3.0",
+    "graphql": "^15.8.0",
     "lodash.debounce": "^4.0.8",
     "next": "latest",
     "next-seo": "^5.1.0",
@@ -43,6 +47,7 @@
     "@types/node": "^14.6.0",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "apollo": "^2.33.9",
     "cypress": "^9.5.1",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",
