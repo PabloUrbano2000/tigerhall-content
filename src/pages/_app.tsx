@@ -1,15 +1,13 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import { ApolloProvider } from '@apollo/client';
+import { ChakraProvider } from "@chakra-ui/react";
+import { ApolloProvider } from "@apollo/client";
+import { AppProps } from "next/app";
 
-import { client } from "../apollo/client";
-import { AppProps } from 'next/app'
-import theme from '../theme'
-import Fonts from '../theme/Fonts'
-import AppSeo from '../components/AppSeo'
+import { client } from "../lib/apollo";
+import theme from "../theme";
+import Fonts from "../theme/Fonts";
+import AppSeo from "../components/AppSeo";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  
-
   return (
     <>
       <AppSeo />
@@ -20,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </ApolloProvider>
       </ChakraProvider>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

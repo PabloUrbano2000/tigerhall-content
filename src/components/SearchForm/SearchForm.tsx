@@ -8,13 +8,12 @@ import {
 } from "@chakra-ui/react";
 
 interface SearchFormProps {
+  "aria-labelledby"?: InputProps["aria-labelledby"];
   isBusy?: boolean;
   search?: (value: string) => void;
 }
 
-export function SearchForm(
-  props: Omit<InputProps, "value" | "onChange" | "type"> & SearchFormProps
-) {
+export function SearchForm(props: SearchFormProps) {
   const { isBusy, search, ...rest } = props || {};
   const [inputValue, setInputValue] = React.useState("");
 
@@ -41,10 +40,23 @@ export function SearchForm(
           value={inputValue}
           onChange={handleOnChange}
           type="search"
+          aria-labelledby="search-label"
+          name="search"
+          variant="filled"
+          placeholder="Type any keyword"
+          bgColor="teal.800"
+          color="gray.700"
+          focusBorderColor="brand.orange"
+          _hover={{
+            bgColor: "teal.900",
+          }}
+          size="sm"
+          height={29}
+          borderRadius={5}
         />
         {isBusy && (
           <InputRightElement height="full">
-            <Spinner size={rest.size} />
+            <Spinner size="sm" />
           </InputRightElement>
         )}
       </InputGroup>

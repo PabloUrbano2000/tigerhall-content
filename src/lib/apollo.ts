@@ -16,15 +16,7 @@ export const client = new ApolloClient({
         fields: {
           contentCards: {
             keyArgs: ["filter", ["keywords"]],
-            merge(
-              existing,
-              incoming,
-              {
-                args: {
-                  filter: { offset = 0 },
-                },
-              }
-            ) {
+            merge(existing, incoming) {
               if (!existing?.edges) return { ...incoming };
               const merged = existing.edges.concat(incoming.edges);
               return merged;
